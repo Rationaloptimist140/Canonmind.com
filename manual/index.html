@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanonMind Core Manual — canonmind.com/manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#09090A;--bg-2:#0F0F0E;--bg-3:#161614;--bg-4:#1C1C1A;
+      --cream:#F2EDDF;--c80:rgba(242,237,223,0.8);--c60:rgba(242,237,223,0.6);
+      --c40:rgba(242,237,223,0.4);--c20:rgba(242,237,223,0.2);--c08:rgba(242,237,223,0.08);
+      --gold:#C4922A;--g50:rgba(196,146,42,0.5);--g20:rgba(196,146,42,0.2);--g08:rgba(196,146,42,0.08);
+      --green:#3A7A5A;--gn15:rgba(58,122,90,0.15);
+      --border:rgba(242,237,223,0.07);--border-2:rgba(242,237,223,0.12);
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+    /* ── DOCUMENT HEADER ── */
+    .doc-header{padding:20px 5%;background:var(--bg-2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200;backdrop-filter:blur(16px)}
+    .dh-left{display:flex;align-items:center;gap:14px}
+    .dh-logo{font-family:'Cormorant Garant',serif;font-size:1.05rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream)}
+    .dh-sep{width:1px;height:14px;background:var(--border-2)}
+    .dh-path{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--gold);letter-spacing:0.08em}
+    .dh-meta{font-family:'JetBrains Mono',monospace;font-size:0.54rem;color:var(--c40);letter-spacing:0.06em;text-align:right}
+    .dh-status{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:0.54rem;color:var(--green)}
+    .dh-dot{width:4px;height:4px;border-radius:50%;background:var(--green);animation:blink 2.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+    /* ── LAYOUT ── */
+    .doc-layout{display:grid;grid-template-columns:220px 1fr;max-width:1280px;margin:0 auto;min-height:calc(100vh - 56px)}
+
+    /* ── SIDEBAR ── */
+    .doc-sidebar{border-right:1px solid var(--border);padding:40px 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+    .sb-label{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--c40);padding:0 24px;margin-bottom:12px}
+    .sb-link{display:block;padding:8px 24px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--c40);text-decoration:none;border-left:2px solid transparent;transition:all 0.15s;letter-spacing:0.04em;line-height:1.4}
+    .sb-link:hover{color:var(--gold);border-left-color:var(--g20)}
+    .sb-link.active{color:var(--gold);border-left-color:var(--gold);background:var(--g08)}
+    .sb-divider{height:1px;background:var(--border);margin:16px 24px}
+    .sb-meta-block{padding:16px 24px;margin-top:auto}
+    .sb-meta-line{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--c20);letter-spacing:0.06em;line-height:1.7}
+
+    /* ── MAIN CONTENT ── */
+    .doc-main{padding:60px 72px;max-width:860px}
+
+    /* ── DOCUMENT INTRO ── */
+    .doc-intro{margin-bottom:72px;padding-bottom:56px;border-bottom:1px solid var(--border)}
+    .di-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+    .di-title{font-family:'Cormorant Garant',serif;font-size:clamp(2.8rem,5vw,4.5rem);font-weight:700;line-height:1.0;color:var(--cream);margin-bottom:10px}
+    .di-title em{font-style:italic;color:var(--gold)}
+    .di-desc{font-size:0.9rem;color:var(--c60);font-weight:300;max-width:540px;line-height:1.7;margin-bottom:28px}
+    .doc-meta-row{display:flex;gap:2px;flex-wrap:wrap}
+    .meta-chip{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--c40);border:1px solid var(--border);padding:5px 10px}
+    .meta-chip-gold{color:var(--gold);border-color:var(--g20);background:var(--g08)}
+
+    /* ── SECTION ── */
+    .doc-section{margin-bottom:80px;padding-bottom:72px;border-bottom:1px solid var(--border);scroll-margin-top:72px}
+    .doc-section:last-child{border-bottom:none}
+    .sec-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:14px}
+    .sec-eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--gold)}
+    .sec-title{font-family:'Cormorant Garant',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;color:var(--cream);margin-bottom:28px;line-height:1.1}
+
+    /* ── EXECUTIVE AXIOM ── */
+    .axiom-block{border-left:3px solid var(--gold);padding:28px 32px;background:var(--g08)}
+    .axiom-text{font-family:'Cormorant Garant',serif;font-size:clamp(1.3rem,2.5vw,1.8rem);line-height:1.4;color:var(--cream);font-weight:600}
+    .axiom-sub{font-size:0.9rem;color:var(--c60);font-weight:300;margin-top:16px;line-height:1.7}
+
+    /* ── ARCHITECTURE STACK ── */
+    .arch-stack{margin-bottom:40px}
+    .arch-layer{display:grid;grid-template-columns:100px 160px 1fr;align-items:stretch;border:1px solid var(--border);border-bottom:none;transition:background 0.2s}
+    .arch-layer:last-child{border-bottom:1px solid var(--border)}
+    .arch-layer:hover{background:var(--c08)}
+    .al-num{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);padding:18px 16px;border-right:1px solid var(--border);display:flex;align-items:center;background:var(--g08)}
+    .al-name{font-family:'Cormorant Garant',serif;font-size:1.05rem;font-weight:600;color:var(--cream);padding:18px 20px;border-right:1px solid var(--border);display:flex;align-items:center;line-height:1.2}
+    .al-name small{display:block;font-family:'JetBrains Mono',monospace;font-size:0.5rem;font-weight:400;color:var(--c40);letter-spacing:0.08em;margin-top:4px;font-style:normal}
+    .al-desc{font-size:0.82rem;color:var(--c60);padding:18px 20px;font-weight:300;line-height:1.6;display:flex;align-items:center}
+    .al-desc strong{color:var(--cream);font-weight:500}
+
+    /* ── CODE BLOCK ── */
+    .code-block{background:var(--bg-3);border:1px solid var(--border);padding:20px 22px;margin:20px 0;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.7;color:var(--c60)}
+    .code-block .ch{color:var(--gold)}.code-block .cv{color:var(--cream)}.code-block .cg{color:var(--green)}
+    .code-block .cm{color:var(--c40);font-style:italic}
+
+    /* ── BODY TEXT ── */
+    .body-p{font-size:0.95rem;line-height:1.85;color:var(--c60);font-weight:300;margin-bottom:18px}
+    .body-p strong{color:var(--cream);font-weight:500}
+    .body-p em{font-style:italic;color:var(--c80)}
+
+    /* ── PULL QUOTE ── */
+    .pull-quote{border-left:3px solid var(--gold);padding:20px 24px;margin:28px 0;background:var(--g08)}
+    .pq-text{font-family:'Cormorant Garant',serif;font-size:clamp(1.1rem,2vw,1.45rem);line-height:1.45;color:var(--c80);font-style:italic}
+    .pq-source{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c40);margin-top:10px}
+
+    /* ── SUB-SECTION HEADER ── */
+    .sub-sec{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin:36px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+    .sub-title{font-family:'Cormorant Garant',serif;font-size:1.35rem;font-weight:600;color:var(--cream);margin-bottom:14px;line-height:1.2}
+
+    /* ── NEGATION TRIO ── */
+    .negation-block{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:28px 0}
+    .neg-card{background:var(--bg-3);border:1px solid var(--border);padding:20px}
+    .neg-card-no{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(139,58,58,0.8);margin-bottom:8px}
+    .neg-card-yes{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:none}
+    .neg-card-title{font-family:'Cormorant Garant',serif;font-size:1.1rem;font-weight:600;color:var(--cream);margin-bottom:6px}
+    .neg-card-desc{font-size:0.78rem;color:var(--c60);font-weight:300;line-height:1.55}
+
+    /* ── FIVE PROPERTIES ── */
+    .props-list{display:flex;flex-direction:column;gap:2px;margin:24px 0}
+    .prop-item{display:grid;grid-template-columns:40px 1fr;border:1px solid var(--border)}
+    .pi-num{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--gold);font-weight:500;background:var(--g08);padding:16px 12px;border-right:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center}
+    .pi-body{padding:16px 18px}
+    .pi-title{font-family:'Cormorant Garant',serif;font-size:1rem;font-weight:600;color:var(--cream);margin-bottom:4px}
+    .pi-desc{font-size:0.8rem;color:var(--c60);font-weight:300;line-height:1.55}
+
+    /* ── TRANSMISSION FLOW ── */
+    .flow-container{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:28px 0}
+    .flow-col{display:flex;flex-direction:column;gap:0}
+    .flow-col-label{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;padding:10px 16px;border:1px solid var(--border);border-bottom:none}
+    .flow-col-label.bad{color:rgba(139,58,58,0.8);background:rgba(139,58,58,0.06)}
+    .flow-col-label.good{color:var(--green);background:var(--gn15)}
+    .flow-step{display:flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid var(--border);border-top:none;font-size:0.78rem}
+    .flow-step .arrow{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--c40);flex-shrink:0}
+    .flow-step .step-text{color:var(--c60);font-weight:300}
+    .flow-step .step-text strong{color:var(--cream);font-weight:500}
+    .flow-step.result{border-top:1px solid var(--border);margin-top:0}
+    .flow-step.result .step-text{font-style:italic}
+
+    /* ── CONSTANTS BLOCK ── */
+    .constants-list{display:flex;flex-direction:column;gap:2px;margin:24px 0}
+    .const-item{border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr}
+    .ci-id{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);padding:16px 16px;border-right:1px solid var(--border);background:var(--g08);display:flex;align-items:flex-start;line-height:1.4}
+    .ci-body{padding:16px 18px}
+    .ci-rule{font-family:'Cormorant Garant',serif;font-size:1rem;font-weight:600;color:var(--cream);margin-bottom:4px;line-height:1.2}
+    .ci-logic{font-size:0.78rem;color:var(--c60);font-weight:300;line-height:1.55}
+    .ci-logic em{font-style:italic;color:var(--c80)}
+
+    /* ── FINAL STATEMENT ── */
+    .final-statement{margin:60px 0 0;padding:48px 0;border-top:1px solid var(--border)}
+    .fs-label{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
+    .fs-text{font-family:'Cormorant Garant',serif;font-size:clamp(1.4rem,2.8vw,2.2rem);line-height:1.35;color:var(--cream);font-weight:400;margin-bottom:28px}
+    .fs-text em{font-style:italic;color:var(--gold)}
+    .fs-close{font-family:'Cormorant Garant',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;color:var(--cream)}
+    .fs-close em{font-style:italic;color:var(--gold)}
+
+    /* ── DOCUMENT FOOTER ── */
+    .doc-footer{padding:32px 72px;border-top:1px solid var(--border);background:var(--bg-2)}
+    .df-inner{max-width:860px;display:flex;justify-content:space-between;align-items:center}
+    .df-logo{font-family:'Cormorant Garant',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--c40)}
+    .df-meta{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--c20);letter-spacing:0.08em;text-align:right;line-height:1.7}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){.doc-layout{grid-template-columns:1fr}.doc-sidebar{display:none}.doc-main{padding:48px 5%}.flow-container{grid-template-columns:1fr}.negation-block{grid-template-columns:1fr}.arch-layer{grid-template-columns:80px 1fr}.al-name{display:none}.df-inner{flex-direction:column;gap:12px;text-align:center}.df-meta{text-align:center}}
+    @media(max-width:600px){.const-item{grid-template-columns:1fr}.ci-id{border-right:none;border-bottom:1px solid var(--border)}.prop-item{grid-template-columns:32px 1fr}}
+  </style>
+</head>
+<body>
+
+<!-- DOCUMENT HEADER -->
+<header class="doc-header">
+  <div class="dh-left">
+    <span class="dh-logo">CanonMind</span>
+    <div class="dh-sep"></div>
+    <span class="dh-path">canonmind.com/manual</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:20px">
+    <div class="dh-status"><div class="dh-dot"></div>Phase 05 · Sealed</div>
+    <div class="dh-meta">DOCUMENT_qpoaiwnc@v1 · cmqs8ogt107yl07ads5pr3whq</div>
+  </div>
+</header>
+
+<div class="doc-layout">
+
+  <!-- SIDEBAR -->
+  <nav class="doc-sidebar">
+    <div class="sb-label">Contents</div>
+    <a class="sb-link active" href="#axiom">00 · Executive Axiom</a>
+    <a class="sb-link" href="#anatomy">01 · Architecture</a>
+    <a class="sb-link" href="#function">02 · Core Function</a>
+    <a class="sb-link" href="#ideology">03 · Ideology</a>
+    <a class="sb-link" href="#transmission">04 · Transmission</a>
+    <a class="sb-link" href="#constants">05 · System Constants</a>
+    <div class="sb-divider"></div>
+    <div class="sb-meta-block">
+      <div class="sb-meta-line">Document: Core Manual v1</div>
+      <div class="sb-meta-line">State: Phase 05 · Sealed</div>
+      <div class="sb-meta-line">KB: 56 entries · Cap: 60</div>
+      <div class="sb-meta-line">Profile: CJzZqVhg</div>
+      <div class="sb-meta-line">Domain: canonmind.com</div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="doc-main">
+
+    <!-- INTRO -->
+    <div class="doc-intro">
+      <div class="di-eyebrow">CanonMind Core Manual</div>
+      <h1 class="di-title">Architectural Anatomy,<br>Core Function &<br><em>Ideological Imperative.</em></h1>
+      <p class="di-desc">The definitive ontological grounding document for the CanonMind system. Locks the ideological vector for all future agent operations. Written at Phase 05 system state.</p>
+      <div class="doc-meta-row">
+        <div class="meta-chip meta-chip-gold">Phase 05 · Deliverable 01</div>
+        <div class="meta-chip">56 Works · 7 Ports · 6 Learning Paths</div>
+        <div class="meta-chip">Rule 06 · CCF Engine · Exegesis Gate</div>
+        <div class="meta-chip">DOCUMENT_qpoaiwnc@v1</div>
+      </div>
+    </div>
+
+    <!-- SECTION 00: EXECUTIVE AXIOM -->
+    <section class="doc-section" id="axiom">
+      <div class="sec-eyebrow">00 · Executive Axiom</div>
+      <h2 class="sec-title">The Single Sentence<br>from Which Everything Follows.</h2>
+      <div class="axiom-block">
+        <div class="axiom-text">CanonMind is not a media platform. It is an active cognitive filtering engine designed to preserve, route, and deliver timeless human signal — and to transform passive consumption into structured intellectual inquiry — in an era defined by the industrialised production of low-signal content.</div>
+        <div class="axiom-sub">Every architectural decision, every scoring formula, every routing rule, and every delivery template in the CanonMind system derives from this single function. When the function is understood, the architecture is inevitable.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 01: ARCHITECTURE -->
+    <section class="doc-section" id="anatomy">
+      <div class="sec-eyebrow">01 · Architectural Anatomy</div>
+      <h2 class="sec-title">Seven Layers.<br>One Integrated<br>Intellectual Infrastructure.</h2>
+
+      <p class="body-p">CanonMind is not a software stack. It is an integrated intellectual infrastructure in which each layer performs a <strong>distinct epistemic function.</strong> The layers do not merely interact — each one makes the next layer possible.</p>
+
+      <div class="arch-stack">
+        <div class="arch-layer">
+          <div class="al-num">LAYER 7</div>
+          <div class="al-name">The Interface<small>WHERE IT BECOMES EXPERIENCE</small></div>
+          <div class="al-desc">canonmind.com · Streaming UI v3 · Interface Spec · Learning Paths · Seed List Reference. Every design decision — JetBrains Mono for metrics, Cormorant Garant for editorial prose — is <strong>an extension of the ideology into the visual register.</strong></div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 6</div>
+          <div class="al-name">Exegesis Gate<small>ANTI-CONTAMINATION FILTER</small></div>
+          <div class="al-desc">Anti-Slop Gate (binary) + Exegesis Score ≥ 7.0. Blocks reaction videos, junket content, and algorithmically optimised explainers before any scoring begins. <strong>A poor interpretive frame, once loaded, is harder to dislodge than to prevent.</strong></div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 5</div>
+          <div class="al-name">CCF Engine<small>INQUIRY TRANSFORMATION</small></div>
+          <div class="al-desc">3–5 timestamped semantic markers per work: Structural Focus · Cognitive Insight · 2050 Verification · Watch Instruction. Converts watching from a passive experience into <strong>a structured hypothesis-testing exercise.</strong></div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 4</div>
+          <div class="al-name">Streaming Router<small>PLATFORM CLASSIFICATION</small></div>
+          <div class="al-desc">Tier 1 Canon-Aligned (Criterion · MUBI · Kanopy · Qobuz) → Tier 1 Public Archive (Mosfilm · BFI) → Tier 2 Broad. <strong>Platform choice is an ideological act.</strong> Routing to Criterion first extends the same judgment that built the KB.</div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 3</div>
+          <div class="al-name">Delivery Engine<small>SEVEN ROUTING PORTS</small></div>
+          <div class="al-desc">PORT 01 Recommendation · PORT 02 Curriculum · PORT 03 Family Track · PORT 04 Streaming · PORT 05 OOC Protocol · PORT 06 CanonGuardian Audit · PORT 07 Learning Path. <strong>Each port enforces a distinct output template and annotation depth.</strong></div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 2</div>
+          <div class="al-name">CanonGuardian<small>REFUTATION APPARATUS</small></div>
+          <div class="al-desc">Post-2010 → MONITOR (10yr min). Post-1990 → challenge. Rule 06 Advisory → specialist routing. CanonGuardian does not block quality. It demands that quality prove itself against time, not against current critical enthusiasm. <strong>Endurance before integration.</strong></div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 1</div>
+          <div class="al-name">Scoring Engine<small>FORMALISED JUDGMENT</small></div>
+          <div class="al-desc">Every INTEGRATE claim is a falsifiable prediction. The 2050 test is the explicit refutation criterion. <strong>Makes cultural judgment explicit, examinable, and contestable.</strong> The opposite of algorithmic opacity.</div>
+        </div>
+        <div class="arch-layer">
+          <div class="al-num">LAYER 0</div>
+          <div class="al-name">Knowledge Base<small>GROUND OF TRUTH</small></div>
+          <div class="al-desc"><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--gold)">cmqs8ogt107yl07ads5pr3whq</span> · 56 INTEGRATE entries · Cap: 60. <strong>The scarcity of the bad is the product.</strong> Nothing enters except through formal batch review and CanonGuardian audit.</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+<span class="ch">CANON_SCORE</span>  = (<span class="cv">Craft</span> + <span class="cv">Human Truth</span> + <span class="ch">Timelessness × 2</span> + <span class="cv">Coherence</span> + <span class="cv">Educational</span> + <span class="cv">Accessibility</span>) ÷ 7
+<span class="ch">THRESHOLD</span>     ≥ 8.0 for INTEGRATE
+<span class="ch">TL_GATE</span>       Score ≤ 5 <span class="cm">→ mathematically blocks INTEGRATE regardless of other dimensions</span>
+<span class="ch">2050_TEST</span>     "Will this still be discussed AND taught in 2050?"
+<span class="cg">HIGHEST_SCORE</span> The Metamorphosis · Kafka · 1915 · Literature → 9.9</div>
+
+    </section>
+
+    <!-- SECTION 02: CORE FUNCTION -->
+    <section class="doc-section" id="function">
+      <div class="sec-eyebrow">02 · The Core Function</div>
+      <h2 class="sec-title">What CanonMind<br>Actually Is.</h2>
+
+      <div class="negation-block">
+        <div class="neg-card">
+          <div class="neg-card-no">✗ It is not</div>
+          <div class="neg-card-title">A Media Catalog</div>
+          <div class="neg-card-desc">A catalog is passive. IMDB is a catalog. The absence of judgment is not neutrality — it is a choice to treat noise and signal as equivalent. CanonMind refuses this equivalence as its founding act.</div>
+        </div>
+        <div class="neg-card">
+          <div class="neg-card-no">✗ It is not</div>
+          <div class="neg-card-title">A Recommendation Engine</div>
+          <div class="neg-card-desc">Netflix, Spotify, and YouTube are recommendation engines. They optimise for watch time, not enrichment. Goodhart's Law applies: when a measure becomes a target, it ceases to be a good measure.</div>
+        </div>
+        <div class="neg-card" style="border-color:var(--g20);background:var(--g08)">
+          <div class="neg-card-yes" style="display:block">✓ It is</div>
+          <div class="neg-card-title">An Active Cognitive<br>Filtering Engine</div>
+          <div class="neg-card-desc">Pre-filters at source · Contextualises at delivery · Filters supplementary context. Three operations no existing platform performs simultaneously.</div>
+        </div>
+      </div>
+
+      <div class="sub-sec">The Three Operations</div>
+      <p class="body-p"><strong>1. Pre-filters at the source.</strong> The KB is quality-gated before any user makes a request. There is no browsing through noise. The library is entirely composed of high-signal works. The decision about what to recommend has already been made — correctly — before the user arrives.</p>
+      <p class="body-p"><strong>2. Contextualises at delivery.</strong> The CCF transforms every delivery from passive experience into structured inquiry. The user is not told what to think about Stalker. They are given a sequence of formal observations and a hypothesis to test against their own attention.</p>
+      <p class="body-p"><strong>3. Filters supplementary context.</strong> The Exegesis Gate ensures that the interpretive layer around the primary work is as rigorous as the work itself. Not a surface-level YouTube explainer. <strong>Geoff Dyer — the man who wrote the definitive book on Stalker.</strong></p>
+
+      <div class="sub-sec">Rule 06 — Protecting High-Cognitive-Load Assets</div>
+      <p class="body-p">Some works — Stalker, The Mirror, Andrei Rublev, Persona — achieve formal and philosophical heights that <em>require preparation to access.</em> This is not a failure of accessibility. It is a property of the work. Complex explanations require prepared receivers.</p>
+
+      <div class="pull-quote">
+        <div class="pq-text">A user who encounters Stalker without having first completed Path 05 is not accessing Stalker — they are accessing a 161-minute film they cannot yet read. The experience is not merely diminished; it actively inoculates them against future engagement by producing an impression of incomprehensibility.</div>
+        <div class="pq-source">Rule 06 Advisory · Permanent CanonGuardian Amendment</div>
+      </div>
+
+      <p class="body-p">Prerequisite routing is not gatekeeping. It is the recognition that <strong>demanding works reward the prepared receiver with a depth of experience that accessible works cannot provide.</strong> Rule 06 builds the infrastructure before routing. The specialist routing notation (16+, on-ramp required, CCF mandatory) is the system's explicit acknowledgment that these works are not difficult — they are demanding, which is different.</p>
+    </section>
+
+    <!-- SECTION 03: IDEOLOGY -->
+    <section class="doc-section" id="ideology">
+      <div class="sec-eyebrow">03 · The Ideological Imperative</div>
+      <h2 class="sec-title">Critical Rationalism,<br>Explanatory Power &<br>The Transmission Imperative.</h2>
+
+      <div class="sub-sec">I · Critical Rationalism and the Explanatory Power Criterion</div>
+      <div class="sub-title">David Deutsch · Karl Popper · The Hard-to-Vary Criterion</div>
+      <p class="body-p">Deutsch's most important insight — drawn from Popper's Critical Rationalism — is that <strong>the mark of a good explanation is that it is hard to vary.</strong> A good explanation explains much and cannot be casually adjusted without losing its explanatory power.</p>
+      <p class="body-p">Applied to cultural objects, this criterion generates CanonMind's entire architecture.</p>
+
+      <div class="pull-quote">
+        <div class="pq-text">The Metamorphosis at 9.9 — the highest score in the KB — is a perfect demonstration. Kafka's 80 pages cannot be reduced. Every sentence is doing structural work. The three-part structure IS the explanation of how capitalism converts persons into problems. Nothing can be varied without losing the explanation.</div>
+        <div class="pq-source">Canon Score 9.9 · The Metamorphosis · Kafka · 1915 · Phase 05 Batch 004</div>
+      </div>
+
+      <p class="body-p">The Canon Score formula is a proxy for the Explanatory Power Criterion. <strong>Works that score highly do so because they are formally and philosophically hard to vary.</strong></p>
+
+      <div class="sub-sec">II · The Transmission Imperative (Joscha Bach)</div>
+      <div class="sub-title">Culture as Information Optimised for Cross-Mind Transmission</div>
+      <p class="body-p">Bach's computational theory implies that culture is information optimised for transmission across the boundaries of individual minds and across time. Great works persist not because of institutional authority but because they <strong>encode genuine truths about human experience in formal structures that survive translation across minds, languages, eras, and contexts.</strong></p>
+      <p class="body-p">The Odyssey has been taught for 2,700 years because the structure it encodes — the homecoming, the faithfulness, the refusal of easier alternatives — maps onto something genuinely constant in human life. Remove the Greek context, the gods, the monsters. The core argument about longing and return remains intact.</p>
+      <p class="body-p">CanonMind's 2050 test operationalises this. The Timelessness ×2 weighting is the system's formal commitment to transmission as the primary quality criterion. The CCF is a transmission mechanism: it converts the formal structure of the work into explicit propositions — <strong>transferable understanding rather than untransferable impression.</strong></p>
+
+      <div class="sub-sec">III · Why Rigorous Minds Converge on This Design</div>
+      <p class="body-p">This is not accidental. The CanonMind architecture is the <em>necessary consequence</em> of applying intellectual rigour to the problem of cultural transmission. Rigorous minds share five properties that CanonMind directly addresses:</p>
+
+      <div class="props-list">
+        <div class="prop-item">
+          <div class="pi-num">01</div>
+          <div class="pi-body"><div class="pi-title">They value explicability</div><div class="pi-desc">The Canon Score formula is explicit. Every integration verdict can be examined. The formula can be agreed with or contested. This is the opposite of 'trust the algorithm.'</div></div>
+        </div>
+        <div class="prop-item">
+          <div class="pi-num">02</div>
+          <div class="pi-body"><div class="pi-title">They value falsifiability</div><div class="pi-desc">The 2050 test is a falsifiable prediction. The CanonGuardian is the refutation mechanism. Every MONITOR verdict is a hypothesis under test.</div></div>
+        </div>
+        <div class="prop-item">
+          <div class="pi-num">03</div>
+          <div class="pi-body"><div class="pi-title">They are impatient with low-signal environments</div><div class="pi-desc">An intelligent person in a Netflix interface is a signal detector in a noise field. The Anti-Slop Gate removes the need for manual noise filtering. Intelligence is damaged, not served, by being forced to filter manually.</div></div>
+        </div>
+        <div class="prop-item">
+          <div class="pi-num">04</div>
+          <div class="pi-body"><div class="pi-title">They understand that depth requires sequence</div><div class="pi-desc">You cannot understand Stalker before Andrei Rublev. You cannot understand The Brothers Karamazov before Crime and Punishment. The prerequisite routing system mechanises the insight that knowledge accumulates and that sequence matters.</div></div>
+        </div>
+        <div class="prop-item">
+          <div class="pi-num">05</div>
+          <div class="pi-body"><div class="pi-title">They want to be challenged, not entertained</div><div class="pi-desc">Rigorous minds do not seek validation from media. They seek problems. Every high-scoring KB work is a formal and philosophical argument that demands engagement, testing, and a return visit.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-sec">IV · Against the Attention Economy — The Core Enemy</div>
+      <div class="sub-title">Goodhart's Law Applied to Culture</div>
+      <p class="body-p">The attention economy rests on a single claim: that engaging content is valuable content. <strong>This claim is false.</strong> Engagement is a weak proxy for value. The human nervous system is reliably engaged by novelty, conflict, and social validation — none of which are correlated with the quality of the information triggering the engagement.</p>
+
+      <div class="code-block"><span class="cm">// Goodhart's Law in the streaming context:</span>
+<span class="ch">METRIC_CHOSEN</span>     = watch_time
+<span class="ch">METRIC_DISPLACED</span>  = enrichment
+<span class="ch">RESULT</span>            = content that produces attention without producing value
+                    crowds out content that produces value
+<span class="cg">CANONMIND_RESPONSE</span> = architectural, not moral
+                    removes the choice set from the noise field entirely
+                    quality gate applied BEFORE user arrives</div>
+    </section>
+
+    <!-- SECTION 04: TRANSMISSION -->
+    <section class="doc-section" id="transmission">
+      <div class="sec-eyebrow">04 · The Transmission Model</div>
+      <h2 class="sec-title">How Consumption<br>Becomes Inquiry.</h2>
+
+      <p class="body-p">The transformation CanonMind effects is not optional — it is structural. The mechanics enforce it. The difference between the two models is not aesthetic. It is <strong>epistemic.</strong></p>
+
+      <div class="flow-container">
+        <div class="flow-col">
+          <div class="flow-col-label bad">✗ Traditional Streaming</div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">User intent</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Algorithm</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Random access</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Passive consumption</span></div>
+          <div class="flow-step result"><span class="arrow">⟹</span><span class="step-text"><strong>Impression</strong> (non-transferable · forgotten)</span></div>
+        </div>
+        <div class="flow-col">
+          <div class="flow-col-label good">✓ CanonMind</div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">User intent → Port routing</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">KB verification (OOC fires if absent)</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Prerequisite check (Rule 06)</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">CCF delivered alongside content</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Structured attention (hypothesis testing)</span></div>
+          <div class="flow-step"><span class="arrow">→</span><span class="step-text">Exegesis layer (contextual deepening)</span></div>
+          <div class="flow-step result"><span class="arrow">⟹</span><span class="step-text"><strong>Understanding</strong> (transferable · compounding)</span></div>
+        </div>
+      </div>
+
+      <div class="sub-sec">The Cumulative Literacy Effect</div>
+      <p class="body-p">Literacy is not binary. A person who has completed Path 01 (Memory and Time) has built a formal vocabulary for how non-linear narrative, stream-of-consciousness, and the pillow shot function as temporal arguments. When they encounter a new film, they see it with that vocabulary active. <strong>The new film is no longer an isolated experience — it is a data point in a developing model.</strong></p>
+
+      <div class="sub-sec">The CCF as Structured Hypothesis Testing</div>
+
+      <div class="pull-quote">
+        <div class="pq-text">M3 of Stalker: 'The Zone Entry — Colour as Revelation. The shift from sepia to colour is a theological argument through colour grading: the Zone is MORE real than reality in Tarkovsky's visual grammar.'</div>
+        <div class="pq-source">Cognitive Companion File · Stalker · 1979 · Marker M2 · 24:00→50:00</div>
+      </div>
+
+      <p class="body-p">This is not an instruction to feel a certain way. It is a <strong>testable claim.</strong> The viewer who tests this hypothesis and finds it confirmed is not merely enjoying a film. They are acquiring a formal instrument — an understanding of how Tarkovsky uses colour grading to encode philosophical claims — that they can apply to all subsequent Tarkovsky films.</p>
+      <p class="body-p"><strong>This is understanding. It is transferable. It is CanonMind's core product.</strong></p>
+    </section>
+
+    <!-- SECTION 05: CONSTANTS -->
+    <section class="doc-section" id="constants">
+      <div class="sec-eyebrow">05 · System Constants</div>
+      <h2 class="sec-title">Seven Locked Rules.<br>Each a Logical<br>Consequence of the Ideology.</h2>
+
+      <p class="body-p">Every rule in the CanonMind system follows directly from the ideology. The rules are not administrative preferences — they are logical consequences of the core function.</p>
+
+      <div class="constants-list">
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 01</div>
+          <div class="ci-body"><div class="ci-rule">The Quality Gate is Binary</div><div class="ci-logic">Works either clear ≥ 8.0 or they do not. No 'good enough' tier. From Critical Rationalism: <em>a falsifiable claim is either confirmed or refuted. There is no partial confirmation.</em></div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 02</div>
+          <div class="ci-body"><div class="ci-rule">Timelessness is Double-Weighted</div><div class="ci-logic">Because endurance is not a proxy for quality — it IS quality, for cultural objects. <em>A formally brilliant work that will not survive the next generation has failed at the primary task of a great work.</em></div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 03</div>
+          <div class="ci-body"><div class="ci-rule">The 2050 Test is Explicit</div><div class="ci-logic">Not 'will critics like this' — <em>will this be discussed AND taught in 2050?</em> The dual condition is deliberate: discussed without taught is noise; taught without discussed is cargo-culting. Both required.</div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 04</div>
+          <div class="ci-body"><div class="ci-rule">OOC Protocol Fires Without Exception</div><div class="ci-logic">Any non-KB work triggers ⚠ OOC. Not a penalty — a formal acknowledgment that unverified works cannot route through verified infrastructure. <em>The KB is the only verified ground.</em></div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 05</div>
+          <div class="ci-body"><div class="ci-rule">Maturity Routing is Never Modified by User Preference</div><div class="ci-logic">The routing is not about restriction — it is about preparation. <em>The routing serves the user's deeper interest, not their stated preference.</em> A user requesting Stalker without Path 05 is being routed toward access, not away from it.</div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 06</div>
+          <div class="ci-body"><div class="ci-rule">Every Output Closes with Source Confirmation</div><div class="ci-logic">Traceability is a requirement of any rigorous system. If a recommendation cannot be traced to a specific KB row, it has not been made by CanonMind — <em>it has been improvised. Improvisation has no place in a quality-gated system.</em></div></div>
+        </div>
+        <div class="const-item">
+          <div class="ci-id">CONSTANT 07</div>
+          <div class="ci-body"><div class="ci-rule">The Anti-Slop Gate Has No Exceptions</div><div class="ci-logic"><em>A poor interpretive frame, once loaded, is harder to dislodge than to prevent.</em> The gate is the system's commitment to maintaining the quality of the entire interpretive ecosystem — not just the primary works themselves.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL STATEMENT -->
+    <div class="final-statement">
+      <div class="fs-label">The Single Sentence This System Encodes</div>
+      <div class="fs-text">The most important cultural objects ever produced by human beings are all accessible, all licensable, and all being systematically buried by platforms that profit from <em>attention</em> rather than <em>understanding</em> — and the correct response is not complaint but architecture.</div>
+      <div class="fs-close">CanonMind is<br><em>the architecture.</em></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- DOCUMENT FOOTER -->
+<footer class="doc-footer">
+  <div class="df-inner">
+    <div class="df-logo">CanonMind</div>
+    <div class="df-meta">
+      canonmind.com/manual · DOCUMENT_qpoaiwnc@v1 · Phase 05 · Deliverable 01<br>
+      KB: cmqs8ogt107yl07ads5pr3whq · 56 entries · Profile CJzZqVhg<br>
+      Sealed: Phase 05 · Ideology vector locked
+    </div>
+  </div>
+</footer>
+
+<script>
+// Active sidebar link tracking
+const sections=document.querySelectorAll('.doc-section[id], #axiom');
+const links=document.querySelectorAll('.sb-link');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      const active=document.querySelector(`.sb-link[href="#${e.target.id}"]`);
+      if(active)active.classList.add('active');
+    }
+  });
+},{threshold:0.3,rootMargin:'-60px 0px -60% 0px'});
+document.querySelectorAll('.doc-section[id]').forEach(s=>obs.observe(s));
+document.getElementById('axiom')&&obs.observe(document.getElementById('axiom'));
+</script>
+
+</body>
+</html>
