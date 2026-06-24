@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanonMind — canonmind.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#09090A;--bg-2:#0F0F0E;--bg-3:#161614;--bg-4:#1E1E1B;
+      --cream:#F2EDDF;--c70:rgba(242,237,223,0.7);--c50:rgba(242,237,223,0.5);
+      --c30:rgba(242,237,223,0.3);--c12:rgba(242,237,223,0.12);--c06:rgba(242,237,223,0.06);
+      --gold:#C4922A;--g40:rgba(196,146,42,0.4);--g15:rgba(196,146,42,0.15);--g08:rgba(196,146,42,0.08);
+      --green:#3A7A5A;--gn20:rgba(58,122,90,0.2);
+      --border:rgba(242,237,223,0.07);--border-2:rgba(242,237,223,0.12);
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;padding:0 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(9,9,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-brand{display:flex;align-items:center;gap:14px}
+    .nav-logo{font-family:'Cormorant Garant',serif;font-size:1.2rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream)}
+    .nav-domain{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--gold);letter-spacing:0.06em}
+    .nav-right{display:flex;align-items:center;gap:20px}
+    .nav-status{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
+    .ndot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+    .nav-cta{font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--cream);padding:8px 18px;text-decoration:none;transition:background 0.2s;cursor:pointer}
+    .nav-cta:hover{background:var(--gold)}
+    /* ── HERO ── */
+    .hero{min-height:100vh;display:flex;align-items:flex-end;padding:120px 6% 80px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+    .hero-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garant',serif;font-size:clamp(18rem,34vw,32rem);font-weight:700;color:rgba(242,237,223,0.018);line-height:1;pointer-events:none;user-select:none;white-space:nowrap;letter-spacing:0.05em}
+    .hero-inner{max-width:1100px;margin:0 auto;width:100%;position:relative;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end}
+    .hero-left{}
+    .hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+    .hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+    .hero-h1{font-family:'Cormorant Garant',serif;font-size:clamp(3.5rem,7vw,7rem);font-weight:700;line-height:0.95;color:var(--cream);margin-bottom:32px}
+    .hero-h1 em{font-style:italic;color:var(--gold)}
+    .hero-p{font-size:1rem;line-height:1.8;color:var(--c50);font-weight:300;max-width:480px;margin-bottom:36px}
+    .hero-p strong{color:var(--c70);font-weight:500}
+    .hero-input-row{display:flex;gap:0;max-width:480px}
+    .hero-input-row input{flex:1;padding:14px 16px;background:var(--bg-3);border:1px solid var(--border-2);border-right:none;color:var(--cream);font-family:'Inter',sans-serif;font-size:0.875rem;outline:none;caret-color:var(--gold)}
+    .hero-input-row input::placeholder{color:var(--c30)}
+    .hero-input-row input:focus{border-color:var(--g40)}
+    .hero-input-row button{padding:14px 22px;background:var(--gold);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+    .hero-input-row button:hover{background:#d4a030}
+    .hero-note{margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:0.54rem;color:var(--c30);letter-spacing:0.06em}
+    .hero-right{}
+    .hero-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    .hs-box{background:var(--bg-3);border:1px solid var(--border);padding:22px 20px}
+    .hs-num{font-family:'Cormorant Garant',serif;font-size:3rem;font-weight:700;color:var(--cream);line-height:1;margin-bottom:6px}
+    .hs-label{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--c30)}
+    .hs-sub{font-size:0.72rem;color:var(--c30);margin-top:4px;font-weight:300}
+    /* ── FORMULA ── */
+    .formula-section{padding:80px 6%;border-bottom:1px solid var(--border);background:var(--bg-2)}
+    .sec-inner{max-width:1100px;margin:0 auto}
+    .sec-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+    .sec-title{font-family:'Cormorant Garant',serif;font-size:clamp(2rem,4vw,3.4rem);font-weight:700;color:var(--cream);margin-bottom:10px;line-height:1.1}
+    .sec-sub{font-size:0.95rem;color:var(--c50);font-weight:300;max-width:540px;margin-bottom:48px;line-height:1.7}
+    .formula-display{background:var(--bg-3);border:1px solid var(--border);padding:28px 32px;font-family:'JetBrains Mono',monospace}
+    .fd-line{font-size:0.78rem;color:var(--c50);margin-bottom:8px;line-height:1.6}
+    .fd-line .fh{color:var(--gold)}.fd-line .fv{color:var(--cream);font-weight:500}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2px}
+    .pillar{background:var(--bg-3);border:1px solid var(--border);padding:28px 24px}
+    .pillar-num{font-family:'Cormorant Garant',serif;font-size:2.8rem;font-weight:700;color:var(--g15);line-height:1;margin-bottom:16px}
+    .pillar h3{font-family:'Cormorant Garant',serif;font-size:1.3rem;font-weight:600;color:var(--cream);margin-bottom:10px;line-height:1.2}
+    .pillar p{font-size:0.84rem;line-height:1.7;color:var(--c50);font-weight:300}
+    /* ── COLLECTION ── */
+    .collection-section{padding:80px 6%;border-bottom:1px solid var(--border)}
+    .collection-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:40px}
+    .coll-card{background:var(--bg-3);border:1px solid var(--border);padding:0;cursor:pointer;transition:border-color 0.2s;position:relative;overflow:hidden}
+    .coll-card:hover{border-color:var(--g40)}
+    .coll-card.active{border-color:var(--gold);background:var(--bg-4)}
+    .cc-head{padding:18px 18px 14px}
+    .cc-medium{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+    .cc-title{font-family:'Cormorant Garant',serif;font-size:1.15rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:3px}
+    .cc-creator{font-size:0.7rem;color:var(--c30)}
+    .cc-score-bar{height:2px;background:var(--border);position:relative}
+    .cc-score-fill{height:100%;background:var(--gold);transition:width 0.4s ease}
+    .cc-body{padding:14px 18px;border-top:1px solid var(--border);display:none}
+    .cc-body.open{display:block}
+    .cc-score-display{font-family:'Cormorant Garant',serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:8px}
+    .cc-score-label{font-family:'JetBrains Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c30);margin-bottom:10px}
+    .cc-desc{font-size:0.78rem;line-height:1.65;color:var(--c50);font-weight:300}
+    /* ── PATHS ── */
+    .paths-section{padding:80px 6%;border-bottom:1px solid var(--border);background:var(--bg-2)}
+    .paths-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:40px}
+    .path-card{background:var(--bg-3);border:1px solid var(--border);padding:26px 22px;transition:border-color 0.2s;cursor:default}
+    .path-card:hover{border-color:var(--g40)}
+    .path-num{font-family:'Cormorant Garant',serif;font-size:3rem;font-weight:700;color:var(--g15);line-height:1;margin-bottom:12px}
+    .path-name{font-family:'Cormorant Garant',serif;font-size:1.15rem;font-weight:600;color:var(--cream);line-height:1.25;margin-bottom:8px}
+    .path-meta{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c30);margin-bottom:10px}
+    .path-preview{font-size:0.78rem;color:var(--c50);font-weight:300;line-height:1.55}
+    /* ── STREAMING DEMO ── */
+    .streaming-section{padding:80px 6%;border-bottom:1px solid var(--border)}
+    .streaming-demo{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:40px}
+    .sd-left{background:var(--bg-3);border:1px solid var(--border);padding:28px}
+    .sd-right{background:var(--bg-2);border:1px solid var(--border);padding:28px}
+    .sd-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+    .sd-title{font-family:'Cormorant Garant',serif;font-size:1.8rem;font-weight:700;color:var(--cream);margin-bottom:6px}
+    .sd-meta{font-size:0.72rem;color:var(--c30);margin-bottom:18px}
+    .sd-score-row{display:flex;gap:2px;margin-bottom:18px}
+    .sd-score-box{flex:1;background:var(--bg-2);border:1px solid var(--border);padding:10px;text-align:center}
+    .sds-num{font-family:'Cormorant Garant',serif;font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1}
+    .sds-label{font-family:'JetBrains Mono',monospace;font-size:0.44rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--c30);margin-top:3px}
+    .sd-platform-list{display:flex;flex-direction:column;gap:4px}
+    .sd-platform{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);font-size:0.75rem}
+    .sd-platform.t1{border-left:3px solid var(--gold)}
+    .sd-platform.free{border-left:3px solid var(--green)}
+    .sdp-name{color:var(--cream);font-weight:500}
+    .sdp-badge{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--gold);letter-spacing:0.06em}
+    .sdp-badge-green{color:var(--green)}
+    .ccf-preview{margin-top:0}
+    .ccf-label{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+    .ccf-bar{height:6px;background:var(--bg-3);border-radius:3px;margin-bottom:12px;position:relative;overflow:hidden}
+    .ccf-segment{position:absolute;top:0;height:100%;border-radius:2px}
+    .ccf-markers{display:flex;flex-direction:column;gap:6px}
+    .ccf-marker{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--bg-3);border:1px solid var(--border)}
+    .ccm-id{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--gold);flex-shrink:0;padding-top:2px}
+    .ccm-ts{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--c30);flex-shrink:0}
+    .ccm-label{font-size:0.75rem;color:var(--c70);font-weight:400;line-height:1.4}
+    /* ── TERMINAL ── */
+    .terminal-section{padding:80px 6%;border-bottom:1px solid var(--border);background:var(--bg-2)}
+    .terminal-card{background:var(--bg-4);border:1px solid var(--border-2);overflow:hidden;max-width:800px;margin:40px auto 0}
+    .tc-bar{padding:10px 16px;background:rgba(196,146,42,0.08);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+    .tc-dot{width:9px;height:9px;border-radius:50%}
+    .tc-dot-r{background:#5A2A2A}.tc-dot-y{background:#5A4E2A}.tc-dot-g{background:#2A4E2A}
+    .tc-label{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--c30);margin-left:auto}
+    .tc-body{padding:20px}
+    .tc-line{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--c30);margin-bottom:5px;line-height:1.5}
+    .tc-line .tp{color:var(--gold)}.tc-line .ok{color:var(--green)}
+    .tc-input-row{display:flex;align-items:center;gap:0;border:1px solid var(--border-2);margin-top:16px}
+    .tc-prompt{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--gold);padding:12px 14px;border-right:1px solid var(--border);flex-shrink:0}
+    .tc-input{flex:1;padding:12px 14px;background:transparent;border:none;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:0.75rem;outline:none;caret-color:var(--gold)}
+    .tc-input::placeholder{color:var(--c30)}
+    .tc-send{padding:12px 18px;background:transparent;border:none;border-left:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);cursor:pointer;transition:background 0.2s}
+    .tc-send:hover{background:var(--g08)}
+    .tc-port-row{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--c30);margin-top:8px;padding:0 2px}
+    .tc-port-badge{padding:2px 8px;border:1px solid var(--border);color:var(--c50)}
+    .tc-port-badge.active{border-color:var(--g40);color:var(--gold);background:var(--g08)}
+    /* ── FOOTER ── */
+    .site-footer{padding:52px 6%;border-top:1px solid var(--border)}
+    .sf-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px}
+    .sf-brand{}
+    .sf-logo{font-family:'Cormorant Garant',serif;font-size:1.4rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream);margin-bottom:6px}
+    .sf-tagline{font-family:'Cormorant Garant',serif;font-size:0.95rem;font-style:italic;color:var(--c30)}
+    .sf-section-title{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .sf-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+    .sf-list li{font-size:0.8rem;color:var(--c50);font-weight:300}
+    .sf-list li strong{color:var(--c70);font-weight:400}
+    .sf-kb-row{margin-top:28px;padding-top:20px;border-top:1px solid var(--border);grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+    .sf-kb-text{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--c30)}
+    @media(max-width:1000px){.hero-inner{grid-template-columns:1fr;gap:40px}.streaming-demo{grid-template-columns:1fr}.sf-inner{grid-template-columns:1fr}.collection-grid{grid-template-columns:repeat(2,1fr)}.paths-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.hero-input-row{flex-direction:column}.hero-input-row input{border-right:1px solid var(--border-2);border-bottom:none}.collection-grid{grid-template-columns:1fr}.paths-grid{grid-template-columns:1fr}.pillars{grid-template-columns:1fr}.nav-right .nav-status{display:none}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">
+    <span class="nav-logo">CanonMind</span>
+    <span class="nav-domain">canonmind.com</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status"><div class="ndot"></div>56 Works · 0 Noise · Live</div>
+    <a class="nav-cta" href="#terminal">Enter Terminal →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">CANON</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">The Anti-Algorithmic Streaming Platform</div>
+      <h1 class="hero-h1">The only thing<br>worth <em>watching.</em><br>Worth <em>hearing.</em></h1>
+      <p class="hero-p">Bach's <em>Well-Tempered Clavier</em> has been taught continuously for <strong>300 years.</strong> Netflix's median title has a Metacritic score below 55. CanonMind exists in the space between those two facts.</p>
+      <div class="hero-input-row">
+        <input type="email" placeholder="Your email address" id="hero-email">
+        <button onclick="heroSignup()">Join Waitlist</button>
+      </div>
+      <div class="hero-note" id="hero-note">No spam. No algorithm. No noise.</div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stats-grid">
+        <div class="hs-box">
+          <div class="hs-num" id="count-works">60</div>
+          <div class="hs-label">Works</div>
+          <div class="hs-sub">Locked knowledge base</div>
+        </div>
+        <div class="hs-box">
+          <div class="hs-num">4</div>
+          <div class="hs-label">Mediums</div>
+          <div class="hs-sub">Film · Music · Literature · Art</div>
+        </div>
+        <div class="hs-box">
+          <div class="hs-num">2050</div>
+          <div class="hs-label">The Test</div>
+          <div class="hs-sub">"Will this still be taught in 2050?"</div>
+        </div>
+        <div class="hs-box">
+          <div class="hs-num">0</div>
+          <div class="hs-label">Noise</div>
+          <div class="hs-sub">Every work quality-gated</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULA + PILLARS -->
+<section class="formula-section">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">The Canon Score</div>
+    <h2 class="sec-title">Quality, measured.<br>Not assumed.</h2>
+    <p class="sec-sub">Every work in the CanonMind library is scored against a six-dimension formula with Timelessness double-weighted. A work scoring below 8.0 never enters. A work whose Timelessness score is uncertain never enters.</p>
+    <div class="formula-display">
+      <div class="fd-line"><span class="fh">CANON_SCORE</span> = (<span class="fv">Craft</span> + <span class="fv">Human Truth</span> + <span class="fh">Timelessness × 2</span> + <span class="fv">Coherence</span> + <span class="fv">Educational</span> + <span class="fv">Accessibility</span>) ÷ 7</div>
+      <div class="fd-line" style="opacity:0.5">Threshold ≥ 8.0 · Timelessness test: "Will this still be discussed and taught in 2050?" · Post-2010 = MONITOR (minimum 10 years)</div>
+    </div>
+    <div class="pillars" style="margin-top:2px">
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <h3>Quality Gate</h3>
+        <p>Every title must clear a minimum Canon Score before it's licensed. The library is intentionally small. <strong style="color:var(--cream)">The constraint is the product.</strong> We carry approximately 1% of what streaming platforms carry. We chose that 1% deliberately.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <h3>Cognitive Companion</h3>
+        <p>Every film and album carries a Cognitive Companion File — timestamped semantic markers delivered alongside playback. Structural focus, cognitive insight, the 2050 verification, a watch instruction. <strong style="color:var(--cream)">Watching is studying.</strong></p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <h3>Exegesis Filter</h3>
+        <p>Every supplementary YouTube asset is scored against a six-dimension Exegesis Score (≥7.0 to pass). An Anti-Slop Gate blocks reaction videos, promotional content, and algorithmically optimised explainers before scoring even begins. <strong style="color:var(--cream)">No surface-level content.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTION PREVIEW -->
+<section class="collection-section">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">The Collection · 56 Works</div>
+    <h2 class="sec-title">Eight of the fifty-six.<br>Click any to see its score.</h2>
+    <p class="sec-sub">Every work shown here has survived the Canon Score gate. Each one will still be discussed and taught in 2050.</p>
+    <div class="collection-grid" id="coll-grid"></div>
+  </div>
+</section>
+
+<!-- LEARNING PATHS -->
+<section class="paths-section">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">Learning Paths · 6 Available</div>
+    <h2 class="sec-title">Six structured journeys.<br>Every work from the locked KB.</h2>
+    <p class="sec-sub">No out-of-canon content. Maturity routing on every work. Cross-path references documented. Built for the curious adult and the family that wants culture to be part of home life.</p>
+    <div class="paths-grid">
+      <div class="path-card"><div class="path-num">01</div><div class="path-name">Understanding Human Memory & Time</div><div class="path-meta">Film + Literature · 7 works · 3–4 weeks</div><div class="path-preview">Homer → Shakespeare → Tolstoy → Welles → Ozu → Woolf. The path that begins with the original homecoming narrative and ends with a single day as an entire life.</div></div>
+      <div class="path-card"><div class="path-num">02</div><div class="path-name">Moral Choice and Evil</div><div class="path-meta">Literature + Film + Visual Art · 7 works · 4–6 weeks</div><div class="path-preview">Sophocles → Shakespeare → Cervantes → Dostoevsky → Coppola → Dostoevsky → Picasso. Closes with an image, not a text. What painting owes to witness.</div></div>
+      <div class="path-card"><div class="path-num">03</div><div class="path-name">Beauty and Structure in Music</div><div class="path-meta">Music only · 7 works · 7 weeks</div><div class="path-preview">Miles Davis → Beatles → Marvin Gaye → Ellington → Bach → Beethoven → Schubert. Most to least accessible. The path that ends where the album ends without resolving.</div></div>
+      <div class="path-card"><div class="path-num">04</div><div class="path-name">What is a Good Life?</div><div class="path-meta">Literature · 7 works · 5–6 weeks</div><div class="path-preview">Homer → Dante → Cervantes → Austen → Dostoevsky → Woolf → García Márquez. Seven centuries of literature. One question. No satisfying answer.</div></div>
+      <div class="path-card"><div class="path-num">05</div><div class="path-name">Humanity vs Technology</div><div class="path-meta">Film + Literature · 6 works · 4–5 weeks</div><div class="path-preview">Kafka → García Márquez → Renoir → Hitchcock → Kubrick → Coppola. Ends at the river. The prerequisite for Stalker.</div></div>
+      <div class="path-card"><div class="path-num">06</div><div class="path-name">Love and Its Costs</div><div class="path-meta">Literature + Music + Film · 7 works · 5–6 weeks</div><div class="path-preview">Homer → Schubert → Tolstoy → Wagner → Hitchcock → Ozu → Woolf. The love that returns. The love that walks into winter. The love remembered. The love not chosen.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STREAMING DEMO -->
+<section class="streaming-section">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">Streaming Delivery · Port 04</div>
+    <h2 class="sec-title">Every title. Fully annotated.<br>Routed to the best legal source.</h2>
+    <p class="sec-sub">When you select a work in CanonMind, you receive the streaming payload, the verified platform routing, and the Cognitive Companion File — all in one interface.</p>
+    <div class="streaming-demo">
+      <div class="sd-left">
+        <div class="sd-eyebrow">Featured Work</div>
+        <div class="sd-title">Bicycle Thieves</div>
+        <div class="sd-meta">Vittorio De Sica · Italy · 1948 · Film · 89 min</div>
+        <div class="sd-score-row">
+          <div class="sd-score-box"><div class="sds-num">9.1</div><div class="sds-label">Canon Score</div></div>
+          <div class="sd-score-box"><div class="sds-num">10</div><div class="sds-label">Timelessness</div></div>
+          <div class="sd-score-box"><div class="sds-num">8</div><div class="sds-label">Accessibility</div></div>
+        </div>
+        <div class="sd-platform-list">
+          <div class="sd-platform t1"><span class="sdp-name">The Criterion Channel</span><span class="sdp-badge">Canon Priority →</span></div>
+          <div class="sd-platform t1"><span class="sdp-name">MUBI</span><span class="sdp-badge">Canon-Aligned →</span></div>
+          <div class="sd-platform free"><span class="sdp-name">Kanopy</span><span class="sdp-badge sdp-badge-green">Free via Library →</span></div>
+          <div class="sd-platform" style="border-left:3px solid var(--border-2)"><span class="sdp-name">YouTube Exegesis Layer</span><span class="sdp-badge">Gopnik 9.2 · Kaufman 9.3</span></div>
+        </div>
+      </div>
+      <div class="sd-right">
+        <div class="ccf-label">Cognitive Companion File · 5 Semantic Markers</div>
+        <div class="ccf-bar">
+          <div class="ccf-segment" style="left:0;width:10.7%;background:#C4922A;opacity:0.7"></div>
+          <div class="ccf-segment" style="left:10.7%;width:12.9%;background:#7A8B3A;opacity:0.7"></div>
+          <div class="ccf-segment" style="left:23.6%;width:19.1%;background:#3A6B8B;opacity:0.7"></div>
+          <div class="ccf-segment" style="left:42.7%;width:33.7%;background:#7A3A8B;opacity:0.7"></div>
+          <div class="ccf-segment" style="left:76.4%;width:23.6%;background:#8B5A3A;opacity:0.7"></div>
+        </div>
+        <div class="ccf-markers">
+          <div class="ccf-marker"><span class="ccm-id" style="color:#C4922A">M1</span><span class="ccm-ts">00:00–09:30</span><span class="ccm-label">The Labor Exchange — Crowd as protagonist, the individual emerging from mass poverty</span></div>
+          <div class="ccf-marker"><span class="ccm-id" style="color:#7A8B3A">M2</span><span class="ccm-ts">09:30–21:00</span><span class="ccm-label">The Bicycle Retrieved — Object as Dignity. Maria pawns the bedsheets.</span></div>
+          <div class="ccf-marker"><span class="ccm-id" style="color:#3A6B8B">M3</span><span class="ccm-ts">21:00–38:00</span><span class="ccm-label">The Theft — Rome as moral indifference. Silence is an argument.</span></div>
+          <div class="ccf-marker"><span class="ccm-id" style="color:#7A3A8B">M4</span><span class="ccm-ts">38:00–68:00</span><span class="ccm-label">The Search — Superstition as the poor's only resource. Four institutions found wanting.</span></div>
+          <div class="ccf-marker"><span class="ccm-id" style="color:#8B5A3A">M5</span><span class="ccm-ts">68:00–89:00</span><span class="ccm-label">The Final Act — Role reversal as tragedy. That gesture is the entire argument.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERMINAL -->
+<section class="terminal-section" id="terminal">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">Live Terminal · 7 Active Ports</div>
+    <h2 class="sec-title">Every request routed.<br>Every response traceable.</h2>
+    <p class="sec-sub">Type any curation request. The system routes it to the appropriate port and returns a structured canonical response drawn exclusively from the locked knowledge base.</p>
+    <div class="terminal-card">
+      <div class="tc-bar">
+        <div class="tc-dot tc-dot-r"></div><div class="tc-dot tc-dot-y"></div><div class="tc-dot tc-dot-g"></div>
+        <span class="tc-label">CanonMind Terminal · KB: cmqs8ogt107yl07ads5pr3whq · 56 entries</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-line"><span class="tp">SYSTEM</span> <span class="ok">ONLINE</span> · Profile CJzZqVhg · All ports active · Anti-Slop Gate armed</div>
+        <div class="tc-line"><span class="tp">FORMULA</span> = (Craft + Truth + <span class="tp">TL×2</span> + Coherence + Educ + Access) ÷ 7 · threshold ≥ 8.0</div>
+        <div class="tc-line"><span class="tp">TIMELESSNESS_TEST</span> = "Will this still be discussed and taught in 2050?"</div>
+        <div class="tc-line" style="opacity:0.3">────────────────────────────────────────────────</div>
+        <div class="tc-line"><span class="tp">AWAITING INPUT</span> // Enter curation request below ↓</div>
+      </div>
+      <div class="tc-input-row">
+        <span class="tc-prompt">canon://</span>
+        <input class="tc-input" type="text" placeholder="e.g. 'Give me one work I've been avoiding' or 'Build a 4-week curriculum on memory'" id="tc-input" oninput="detectPort(this.value)">
+        <button class="tc-send">Route →</button>
+      </div>
+      <div class="tc-port-row">
+        <span style="color:var(--c30)">Routing to:</span>
+        <span class="tc-port-badge active" id="port-badge">PORT 01 — RECOMMENDATION</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand">
+      <div class="sf-logo">CanonMind</div>
+      <div class="sf-tagline">"Only what's worth your time."</div>
+    </div>
+    <div>
+      <div class="sf-section-title">Active System</div>
+      <ul class="sf-list">
+        <li><strong>56 works</strong> · Film, Music, Literature, Visual Art</li>
+        <li><strong>6 learning paths</strong> · All from locked KB</li>
+        <li><strong>7 active ports</strong> · Recommendation through CanonGuardian</li>
+        <li><strong>Rule 06 Advisory</strong> · Specialist routing enforced</li>
+        <li><strong>YouTube Quality Layer</strong> · Exegesis Score ≥ 7.0</li>
+      </ul>
+    </div>
+    <div>
+      <div class="sf-section-title">Platforms</div>
+      <ul class="sf-list">
+        <li>The Criterion Channel</li>
+        <li>MUBI</li>
+        <li>Kanopy · Free via library</li>
+        <li>Qobuz · Hi-res music</li>
+        <li>Mosfilm Archive · Category A</li>
+      </ul>
+    </div>
+    <div class="sf-kb-row">
+      <span class="sf-kb-text">KB: cmqs8ogt107yl07ads5pr3whq · 56 entries · Profile CJzZqVhg · canonmind.com</span>
+      <span class="sf-kb-text">Phase 05 · Batch 004 Complete · 2050 Test Active</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const FEATURED=[
+  {medium:"Film",title:"The Godfather",creator:"Coppola · 1972",score:9.7,pct:97,desc:"54 years. AFI #2. Taught in film schools, business schools, and literature programmes simultaneously. Michael Corleone's arc is the most legible moral tragedy in popular cinema."},
+  {medium:"Music",title:"Kind of Blue",creator:"Miles Davis · 1959",score:9.7,pct:97,desc:"67 years. The most commercially successful jazz album ever recorded. The pivot point of jazz history. Entry point for millions of listeners who thought they didn't like jazz."},
+  {medium:"Music",title:"Symphony No. 9",creator:"Beethoven · 1824",score:9.7,pct:97,desc:"The single most transformative work in the Western orchestral tradition. Composed while completely deaf. The choral finale is the most argued-over 20 minutes in music."},
+  {medium:"Literature",title:"The Metamorphosis",creator:"Kafka · 1915",score:9.9,pct:99,desc:"111 years. The most formally precise novella in the Western canon. 80 pages that cannot be reduced. Alienation, family obligation, and dehumanisation — grows more prescient with every decade."},
+  {medium:"Literature",title:"Hamlet",creator:"Shakespeare · c. 1601",score:9.6,pct:96,desc:"The most studied literary work in the English language. 400 years of continuous critical attention. Will certainly be discussed and taught in 2050."},
+  {medium:"Visual Art",title:"Sistine Chapel Ceiling",creator:"Michelangelo · 1508–1512",score:9.6,pct:96,desc:"The most technically and conceptually ambitious painted surface in Western history. The primary reference point for the study of High Renaissance art for 500 years."},
+  {medium:"Film",title:"Seven Samurai",creator:"Kurosawa · 1954",score:9.7,pct:97,desc:"72 years. #17 Sight & Sound 2022. The defining epic of world cinema — foundational to every action, war, and ensemble film since. Batch 004 addition."},
+  {medium:"Film",title:"Tokyo Story",creator:"Ozu · 1953",score:9.4,pct:94,desc:"The quietest and most devastating film about time passing. 'Isn't life disappointing?' 'Yes, it is.' — the eight words that end 136 minutes of total formal restraint."},
+,
+  {medium:"Visual Art",title:"The Night Watch",creator:"Rembrandt · 1642",score:9.7,pct:97,desc:"384 years in active critical discourse. The national painting of the Netherlands. Rembrandt's light manipulation establishes every subsequent argument about painting as narrative. Fills the Dutch Golden Age gap in the Visual Art section. Batch 005."},
+  {medium:"Music",title:"Symphony No. 5, Op. 47",creator:"Shostakovich · 1937",score:9.6,pct:96,desc:"89 years. The most famous symphony of the 20th century after Beethoven's 9th. The finale's ambiguity (triumphant or sardonic?) IS the work's formal argument about dissidence under totalitarianism. Batch 005."},
+  {medium:"Literature",title:"Things Fall Apart",creator:"Chinua Achebe · 1958",score:9.4,pct:94,desc:"68 years. Translated into 57 languages. The foundational text of African literature in English. Fills the complete absence of African literature from the KB. Three-part structure is formally perfect. Batch 005."},
+  {medium:"Film",title:"Au Hasard Balthazar",creator:"Robert Bresson · 1966",score:9.1,pct:91,desc:"60 years. Sight & Sound top-20. Bresson's cinematograph philosophy — non-professional actors, absolute restraint, sound-image counterpoint — is the missing formalist tradition. Rule 06: Bicycle Thieves on-ramp required. Batch 005."}
+];
+const grid=document.getElementById('coll-grid');
+let openCard=null;
+FEATURED.forEach((w,i)=>{
+  const d=document.createElement('div');
+  d.className='coll-card';
+  d.innerHTML=`<div class="cc-head"><div class="cc-medium">${w.medium}</div><div class="cc-title">${w.title}</div><div class="cc-creator">${w.creator}</div></div><div class="cc-score-bar"><div class="cc-score-fill" style="width:0%"></div></div><div class="cc-body" id="cb-${i}"><div class="cc-score-display">${w.score}</div><div class="cc-score-label">Canon Score / 10</div><p class="cc-desc">${w.desc}</p></div>`;
+  d.addEventListener('click',()=>{
+    const body=document.getElementById('cb-'+i);
+    const fill=d.querySelector('.cc-score-fill');
+    if(openCard&&openCard!==i){
+      document.getElementById('cb-'+openCard).classList.remove('open');
+      document.querySelectorAll('.coll-card')[openCard].classList.remove('active');
+      document.querySelectorAll('.coll-card')[openCard].querySelector('.cc-score-fill').style.width='0%';
+    }
+    body.classList.toggle('open');
+    d.classList.toggle('active');
+    fill.style.width=body.classList.contains('open')?w.pct+'%':'0%';
+    openCard=body.classList.contains('open')?i:null;
+  });
+  grid.appendChild(d);
+});
+
+function detectPort(v){
+  const el=document.getElementById('port-badge');
+  const val=v.toLowerCase();
+  if(!val){el.textContent='PORT 01 — RECOMMENDATION';el.className='tc-port-badge active';return}
+  if(val.includes('week')||val.includes('curriculum')||val.includes('course')||val.includes('theme')){el.textContent='PORT 02 — CURRICULUM';el.className='tc-port-badge active'}
+  else if(val.includes('child')||val.includes('kid')||val.includes('family')||val.includes('age')||val.includes('parent')){el.textContent='PORT 03 — FAMILY TRACK';el.className='tc-port-badge active'}
+  else if(val.includes('stream')||val.includes('watch')||val.includes('listen')||val.includes('where')||val.includes('play')){el.textContent='PORT 04 — STREAMING DELIVERY';el.className='tc-port-badge active'}
+  else if(val.includes('path')||val.includes('journey')||val.includes('learning')){el.textContent='PORT 07 — LEARNING PATH';el.className='tc-port-badge active'}
+  else{el.textContent='PORT 01 — RECOMMENDATION';el.className='tc-port-badge active'}
+}
+
+function heroSignup(){
+  const input=document.getElementById('hero-email');
+  const note=document.getElementById('hero-note');
+  const row=input.parentElement;
+  if(!input.value||!/.+@.+\..+/.test(input.value.trim())){input.style.borderColor='rgba(196,146,42,0.7)';const op=input.placeholder;input.placeholder='Please enter a valid email';setTimeout(()=>{input.style.borderColor='';input.placeholder=op},2200);return}
+  row.style.display='none';note.textContent='✓ You\'re on the list. We\'ll be in touch when CanonMind opens early access.';note.style.color='var(--gold)';
+}
+document.getElementById('hero-email').addEventListener('keydown',e=>{if(e.key==='Enter')heroSignup()});
+</script>
+</body>
+</html>
