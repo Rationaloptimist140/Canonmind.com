@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanonMind — Investment Thesis · canonmind.com/invest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#09090A;--bg-2:#0F0F0E;--bg-3:#161614;--cream:#F2EDDF;--c70:rgba(242,237,223,0.7);--c50:rgba(242,237,223,0.5);--c30:rgba(242,237,223,0.3);--c12:rgba(242,237,223,0.12);--c06:rgba(242,237,223,0.06);--gold:#C4922A;--g30:rgba(196,146,42,0.3);--g10:rgba(196,146,42,0.1);--border:rgba(242,237,223,0.07);--border-2:rgba(242,237,223,0.13)}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+    header{padding:28px 8%;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .h-logo{font-family:'Cormorant Garant',serif;font-size:1.1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream)}
+    .h-meta{font-family:'JetBrains Mono',monospace;font-size:0.54rem;color:var(--c30);letter-spacing:0.1em;text-align:right;line-height:1.7}
+    main{max-width:860px;margin:0 auto;padding:60px 8% 80px}
+    .ey{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+    .ey::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+    h1{font-family:'Cormorant Garant',serif;font-size:clamp(2.6rem,6vw,5rem);font-weight:700;line-height:1.0;color:var(--cream);margin-bottom:10px}
+    h1 em{font-style:italic;color:var(--gold)}
+    .sub{font-family:'Cormorant Garant',serif;font-size:clamp(1.1rem,2.2vw,1.6rem);font-style:italic;color:var(--c50);margin-bottom:44px;line-height:1.3;font-weight:300}
+    .rule{height:1px;background:var(--border);margin:36px 0}
+    .p{font-size:1rem;line-height:1.85;color:var(--c50);font-weight:300;margin-bottom:16px}
+    .p strong{color:var(--cream);font-weight:500}
+    .pq{border-left:3px solid var(--gold);padding:20px 24px;background:var(--g10);margin:28px 0}
+    .pq-text{font-family:'Cormorant Garant',serif;font-size:clamp(1.05rem,2vw,1.4rem);line-height:1.45;color:var(--c70);font-style:italic}
+    .sh{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin:44px 0 12px;padding-top:28px;border-top:1px solid var(--border)}
+    .st{font-family:'Cormorant Garant',serif;font-size:clamp(1.4rem,2.8vw,2.2rem);font-weight:700;color:var(--cream);margin-bottom:14px;line-height:1.1}
+    .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:22px 0}
+    .sb{background:var(--bg-3);border:1px solid var(--border);padding:16px;text-align:center}
+    .sb-n{font-family:'Cormorant Garant',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+    .sb-l{font-family:'JetBrains Mono',monospace;font-size:0.46rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c30);margin-top:4px}
+    .sb-s{font-size:0.68rem;color:var(--c30);margin-top:3px;font-weight:300}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:20px 0}
+    .box{background:var(--bg-3);border:1px solid var(--border);padding:18px 20px}
+    .box.gold{border-color:var(--g30);background:var(--g10)}
+    .box-label{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--c30);margin-bottom:7px}
+    .box-label-g{color:var(--gold)}
+    .box-name{font-family:'Cormorant Garant',serif;font-size:1.1rem;font-weight:600;color:var(--cream);margin-bottom:5px}
+    .box-text{font-size:0.78rem;color:var(--c50);font-weight:300;line-height:1.55}
+    .box-text strong{color:var(--cream);font-weight:500}
+    .model{display:flex;flex-direction:column;gap:2px;margin:20px 0}
+    .mr{display:grid;grid-template-columns:150px 1fr 90px;border:1px solid var(--border)}
+    .mr-k{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:var(--g10);padding:11px 13px;border-right:1px solid var(--border);display:flex;align-items:center}
+    .mr-v{font-size:0.8rem;color:var(--c50);padding:11px 15px;font-weight:300;line-height:1.5}
+    .mr-v strong{color:var(--cream);font-weight:500}
+    .mr-p{font-family:'Cormorant Garant',serif;font-size:1.2rem;font-weight:700;color:var(--gold);padding:11px 15px;border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+    .ms{display:flex;flex-direction:column;gap:2px;margin:20px 0}
+    .ms-r{display:grid;grid-template-columns:90px 1fr;border:1px solid var(--border)}
+    .ms-k{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--gold);background:var(--g10);padding:11px 13px;border-right:1px solid var(--border);display:flex;align-items:center}
+    .ms-v{font-size:0.78rem;color:var(--c50);padding:11px 15px;font-weight:300;line-height:1.5}
+    .ms-v strong{color:var(--cream);font-weight:500}
+    .final{margin-top:52px;padding:40px 0;border-top:1px solid var(--border)}
+    .fl{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+    .ft{font-family:'Cormorant Garant',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);line-height:1.35;color:var(--c70);margin-bottom:22px;font-style:italic}
+    .fc{font-family:'Cormorant Garant',serif;font-size:clamp(1.8rem,3.8vw,3rem);font-weight:700;color:var(--cream);line-height:1.1}
+    .fc em{font-style:italic;color:var(--gold)}
+    footer{padding:26px 8%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .f-logo{font-family:'Cormorant Garant',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--c30)}
+    .f-meta{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:rgba(242,237,223,0.15);letter-spacing:0.08em;text-align:right;line-height:1.7}
+    @media(max-width:700px){main{padding:44px 6% 60px}.stat-row{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.mr{grid-template-columns:1fr}.mr-k{border-right:none;border-bottom:1px solid var(--border)}.mr-p{border-left:none;border-top:1px solid var(--border)}.ms-r{grid-template-columns:1fr}.ms-k{border-right:none;border-bottom:1px solid var(--border)}header{flex-direction:column;gap:10px;text-align:center}footer{flex-direction:column;gap:10px;text-align:center}.f-meta{text-align:center}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="h-logo">CanonMind</div>
+  <div class="h-meta">Investment Thesis · Phase 08<br>canonmind.com/invest · 60/60 KB Sealed</div>
+</header>
+<main>
+  <div class="ey">The Anti-Algorithmic Investment Thesis</div>
+  <h1>The highest-value<br>asset in the attention<br>economy is <em>silence.</em></h1>
+  <p class="sub">How a strictly capped, zero-noise content infrastructure captures the premium market that algorithmic saturation has created — and why the constraint is the valuation.</p>
+  <div class="rule"></div>
+
+  <div class="sh">§01 · The Problem</div>
+  <h2 class="st">Algorithmic Saturation Has Created Its Own Antidote Market.</h2>
+  <p class="p">The streaming industry has optimised itself into a structural crisis. Every major platform competes on volume, engagement, and content velocity. <strong>None competes on signal quality.</strong> The result: 42% of global streamers report they spend too much. 18 minutes wasted per session choosing what to watch. A sea of content with a median Metacritic score below 55.</p>
+  <p class="p">This is not a content problem. It is an <strong>architecture problem.</strong> Goodhart's Law: when watch-time becomes the metric, enrichment is what gets displaced. The market has not produced an architectural response. Until now.</p>
+  <div class="pq"><div class="pq-text">"Netflix carries over 17,000 titles. The median Netflix title has a Metacritic score below 55. An algorithm that optimises for watch time is not a curation system — it is a noise machine with excellent distribution."</div></div>
+  <div class="stat-row">
+    <div class="sb"><div class="sb-n">42%</div><div class="sb-l">Streamers overspending</div><div class="sb-s">Simon-Kucher 2025</div></div>
+    <div class="sb"><div class="sb-n">18 min</div><div class="sb-l">Choice paralysis</div><div class="sb-s">per session avg</div></div>
+    <div class="sb"><div class="sb-n">17K+</div><div class="sb-l">Netflix titles</div><div class="sb-s">median score: 55/100</div></div>
+    <div class="sb"><div class="sb-n">$1B</div><div class="sb-l">MUBI valuation</div><div class="sb-s">1.7M subs · film only</div></div>
+  </div>
+
+  <div class="sh">§02 · The Response</div>
+  <h2 class="st">The Constraint Is the Product. The Silence Is the Signal.</h2>
+  <p class="p">CanonMind's response to algorithmic saturation is <strong>not a better algorithm.</strong> It is the removal of the algorithm entirely. The platform operates from a locked knowledge base of <strong>60 works</strong> — Film, Music, Literature, Visual Art — each cleared by a six-dimension Canon Score formula with Timelessness double-weighted. A work scoring below 8.0 never enters. The 60-entry cap is sealed.</p>
+  <p class="p">Every delivery includes a Cognitive Companion File — timestamped semantic markers that convert watching or listening from passive consumption into <strong>structured intellectual inquiry.</strong> The Exegesis Gate filters supplementary content against a quality score. The system does not merely curate. It actively upgrades the attention of everyone who uses it.</p>
+  <div class="pq"><div class="pq-text">"The most important cultural objects ever produced by human beings are all accessible, all licensable, and all being systematically buried by platforms that profit from attention rather than understanding — and the correct response is not complaint but architecture."</div></div>
+
+  <div class="sh">§03 · The Market</div>
+  <h2 class="st">Human-Signal Filtering Is the Highest Premium Asset Class in Saturated AI Generation.</h2>
+  <p class="p">The acceleration of AI-generated content is not CanonMind's competitor. It is its <strong>most powerful tailwind.</strong> As algorithmic content volume approaches infinity, the scarcity value of works that have survived genuine human critical consensus across decades becomes structural. The Beethoven 9th (1824) does not depreciate as a curation asset when AI generates 10,000 ambient pieces per hour. It appreciates.</p>
+  <p class="p">CanonMind is <strong>the first platform whose entire value proposition is the removal of optionality.</strong> You do not browse through noise. You select from 60 pre-verified works and receive a structured educational framework alongside the stream. The decision cost is zero. The signal density is maximum.</p>
+
+  <div class="sh">§04 · Comparables</div>
+  <h2 class="st">The Niche Platform That Won by Staying Small.</h2>
+  <div class="two-col">
+    <div class="box"><div class="box-label">Precedent</div><div class="box-name">MUBI</div><div class="box-text"><strong>$1B valuation</strong> · 1.7M subscribers · $200M revenue<br>Film only · No music · No education<br>No sealed KB · No CCF · No MCP layer<br>≈ $588 per subscriber at valuation</div></div>
+    <div class="box gold"><div class="box-label box-label-g">CanonMind</div><div class="box-name">canonmind.com</div><div class="box-text">Film + Music + Literature + Visual Art<br>60-entry sealed KB · CCF engine<br>signal-mcp B2B layer · 6 learning paths<br>YouTube Exegesis Gate · Stripe billing<br><strong>TAM structurally larger than MUBI</strong></div></div>
+  </div>
+
+  <div class="sh">§05 · Business Model</div>
+  <h2 class="st">Licensing, Not Production. Margin, Not Burn.</h2>
+  <div class="model">
+    <div class="mr"><div class="mr-k">Signal</div><div class="mr-v">Ports 01–03 · 100 calls/day · CCF basic · No Rule 06</div><div class="mr-p">$19</div></div>
+    <div class="mr"><div class="mr-k">Canon</div><div class="mr-v">Ports 01–05, 07 · Unlimited · Full CCF · Rule 06 access · signal-mcp</div><div class="mr-p">$49</div></div>
+    <div class="mr"><div class="mr-k">Institution</div><div class="mr-v">All 7 ports · 10 seats · Curriculum export · SLA 99.9% · signal-mcp webhooks</div><div class="mr-p">$199</div></div>
+    <div class="mr" style="border-color:var(--g30);background:var(--g10)"><div class="mr-k" style="color:var(--gold)">Year 3</div><div class="mr-v" style="color:var(--c70)">250K subscribers · ARR ~$46.5M · Gross margin 55% · Content cost ~$12M/yr</div><div class="mr-p">$46.5M</div></div>
+  </div>
+
+  <div class="sh">§06 · The Ask</div>
+  <h2 class="st">$2.5M Seed. Three Milestones. One Constraint.</h2>
+  <div class="ms">
+    <div class="ms-r"><div class="ms-k">Month 1–6</div><div class="ms-v"><strong>Criterion Channel API</strong> · CCF engine production · signal-mcp v1 public · Stripe billing live</div></div>
+    <div class="ms-r"><div class="ms-k">Month 6–12</div><div class="ms-v"><strong>MUBI + Qobuz API</strong> · Exegesis engine automated · B2B API keys · <strong>Series A trigger: 100K subscribers</strong></div></div>
+    <div class="ms-r"><div class="ms-k">Month 12–24</div><div class="ms-v"><strong>Kanopy Institutional</strong> · UK A-level integration · Series A · MUBI comparable implies <strong>$58M+ valuation</strong></div></div>
+  </div>
+
+  <div class="final">
+    <div class="fl">The Core Argument</div>
+    <div class="ft">The attention economy has optimised itself into a signal crisis. The premium operator — the culturally exhausted adult who will pay for silence — is the fastest-growing underserved market in media. CanonMind is the first platform built architecturally around their specific need. Not a better algorithm. A sealed library of 60 works. A cognitive companion for every one of them.</div>
+    <div class="fc">The constraint is<br><em>the valuation.</em></div>
+  </div>
+</main>
+<footer>
+  <div class="f-logo">CanonMind</div>
+  <div class="f-meta">canonmind.com/invest · Phase 08<br>KB: cmqs8ogt107yl07ads5pr3whq · 60/60 Sealed<br>Core Manual: DOCUMENT_qpoaiwnc@v3</div>
+</footer>
+</body>
+</html>
