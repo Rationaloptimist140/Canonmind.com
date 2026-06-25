@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanonMind — Subscribe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#09090A;--bg-2:#0F0F0E;--bg-3:#161614;--cream:#F2EDDF;--c60:rgba(242,237,223,0.6);--c40:rgba(242,237,223,0.4);--c20:rgba(242,237,223,0.2);--c08:rgba(242,237,223,0.08);--gold:#C4922A;--g30:rgba(196,146,42,0.3);--g10:rgba(196,146,42,0.1);--green:#3A7A5A;--gn15:rgba(58,122,90,0.15);--border:rgba(242,237,223,0.07);--border-2:rgba(242,237,223,0.13)}
+    html{font-size:16px}
+    body{background:var(--bg);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+    nav{height:52px;padding:0 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(9,9,10,0.96);border-bottom:1px solid var(--border);position:sticky;top:0}
+    .nav-logo{font-family:'Cormorant Garant',serif;font-size:1.1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream);text-decoration:none}
+    .nav-link{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c40);text-decoration:none;transition:color 0.2s}
+    .nav-link:hover{color:var(--gold)}
+    main{max-width:980px;margin:0 auto;padding:60px 6% 80px}
+    .eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    h1{font-family:'Cormorant Garant',serif;font-size:clamp(2rem,5vw,4rem);font-weight:700;line-height:1.0;color:var(--cream);margin-bottom:10px}
+    h1 em{font-style:italic;color:var(--gold)}
+    .page-sub{font-size:0.95rem;color:var(--c60);font-weight:300;max-width:520px;margin-bottom:48px;line-height:1.7}
+    .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:40px}
+    .plan{background:var(--bg-3);border:1px solid var(--border);display:flex;flex-direction:column;transition:border-color 0.2s}
+    .plan:hover{border-color:var(--g30)}
+    .plan.featured{border-color:var(--gold)}
+    .plan-head{padding:24px 22px 18px}
+    .plan-badge{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--c40);margin-bottom:8px}
+    .plan-badge-gold{color:var(--gold)}
+    .plan-name{font-family:'Cormorant Garant',serif;font-size:1.5rem;font-weight:700;color:var(--cream);margin-bottom:4px}
+    .plan-price{font-family:'Cormorant Garant',serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:2px}
+    .plan-period{font-size:0.78rem;color:var(--c40);font-weight:300}
+    .plan-divider{height:1px;background:var(--border);margin:0 22px}
+    .plan-features{padding:18px 22px;flex:1}
+    .feature{font-size:0.8rem;color:var(--c60);padding:5px 0;border-bottom:1px solid var(--c08);font-weight:300;display:flex;gap:8px}
+    .feature:last-child{border-bottom:none}
+    .f-check{color:var(--green);flex-shrink:0}
+    .f-no{color:rgba(139,58,58,0.6);flex-shrink:0}
+    .plan-footer{padding:18px 22px;border-top:1px solid var(--border)}
+    .plan-btn{width:100%;padding:13px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s;text-decoration:none;display:block;text-align:center}
+    .plan-btn-ghost{background:transparent;color:var(--c60);border:1px solid var(--border)}
+    .plan-btn-ghost:hover{border-color:var(--g30);color:var(--gold)}
+    .plan-btn-gold{background:var(--gold);color:var(--bg)}
+    .plan-btn-gold:hover{background:#d4a030}
+    .guarantee{text-align:center;padding:24px 0;font-size:0.8rem;color:var(--c40);font-weight:300}
+    .guarantee strong{color:var(--c60);font-weight:500}
+    .faq{margin-top:40px}
+    .faq-title{font-family:'Cormorant Garant',serif;font-size:1.4rem;font-weight:700;color:var(--cream);margin-bottom:16px}
+    .faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+    .faq-q{font-size:0.88rem;font-weight:500;color:var(--cream);margin-bottom:6px;cursor:pointer}
+    .faq-a{font-size:0.82rem;color:var(--c60);font-weight:300;line-height:1.65}
+    footer{padding:26px 6%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .f-logo{font-family:'Cormorant Garant',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--c40)}
+    .f-meta{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:rgba(242,237,223,0.15);text-align:right;line-height:1.7}
+    @media(max-width:800px){.plans{grid-template-columns:1fr}footer{flex-direction:column;gap:10px;text-align:center}.f-meta{text-align:center}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">CanonMind</a>
+  <a class="nav-link" href="/dashboard">Dashboard →</a>
+</nav>
+
+<main>
+  <div class="eyebrow">canonmind.com/subscribe</div>
+  <h1>Access the<br>sealed <em>canon.</em></h1>
+  <p class="page-sub">60 quality-gated works. 6 learning paths. Cognitive Companion Files. Tier-based API access for agents and developers. No algorithmic noise.</p>
+
+  <div class="plans">
+    <!-- SIGNAL -->
+    <div class="plan" id="signal">
+      <div class="plan-head">
+        <div class="plan-badge">Tier 1</div>
+        <div class="plan-name">Signal</div>
+        <div class="plan-price">$19</div>
+        <div class="plan-period">per month</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="feature"><span class="f-check">✓</span>Full 60-work KB access</div>
+        <div class="feature"><span class="f-check">✓</span>Ports 01, 02, 03</div>
+        <div class="feature"><span class="f-check">✓</span>100 API calls / day</div>
+        <div class="feature"><span class="f-check">✓</span>6 Learning Paths</div>
+        <div class="feature"><span class="f-check">✓</span>CCF basic (3 markers)</div>
+        <div class="feature"><span class="f-check">✓</span>signal-mcp tools</div>
+        <div class="feature"><span class="f-no">✗</span>Rule 06 specialist works</div>
+        <div class="feature"><span class="f-no">✗</span>Streaming delivery (Port 04)</div>
+      </div>
+      <div class="plan-footer">
+        <a class="plan-btn plan-btn-ghost" href="https://buy.stripe.com/SIGNAL_PLACEHOLDER" id="signal-btn">
+          Subscribe to Signal →
+        </a>
+      </div>
+    </div>
+
+    <!-- CANON (featured) -->
+    <div class="plan featured" id="canon">
+      <div class="plan-head">
+        <div class="plan-badge plan-badge-gold">Tier 2 · Most Popular</div>
+        <div class="plan-name">Canon</div>
+        <div class="plan-price">$49</div>
+        <div class="plan-period">per month</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="feature"><span class="f-check">✓</span>Everything in Signal</div>
+        <div class="feature"><span class="f-check">✓</span>Ports 01–05 + 07 (all except audit)</div>
+        <div class="feature"><span class="f-check">✓</span>Unlimited API calls</div>
+        <div class="feature"><span class="f-check">✓</span>Full CCF (5 markers)</div>
+        <div class="feature"><span class="f-check">✓</span>Rule 06 specialist access</div>
+        <div class="feature"><span class="f-check">✓</span>Streaming delivery (Port 04)</div>
+        <div class="feature"><span class="f-check">✓</span>signal-mcp all 4 tools</div>
+        <div class="feature"><span class="f-no">✗</span>CanonGuardian audit (Port 06)</div>
+      </div>
+      <div class="plan-footer">
+        <a class="plan-btn plan-btn-gold" href="https://buy.stripe.com/CANON_PLACEHOLDER" id="canon-btn">
+          Subscribe to Canon →
+        </a>
+      </div>
+    </div>
+
+    <!-- INSTITUTION -->
+    <div class="plan" id="institution">
+      <div class="plan-head">
+        <div class="plan-badge">Tier 3</div>
+        <div class="plan-name">Institution</div>
+        <div class="plan-price">$199</div>
+        <div class="plan-period">per month · 10 seats</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="feature"><span class="f-check">✓</span>Everything in Canon</div>
+        <div class="feature"><span class="f-check">✓</span>All 7 ports including audit</div>
+        <div class="feature"><span class="f-check">✓</span>10 seats / API keys</div>
+        <div class="feature"><span class="f-check">✓</span>Curriculum export tools</div>
+        <div class="feature"><span class="f-check">✓</span>signal-mcp webhooks</div>
+        <div class="feature"><span class="f-check">✓</span>SLA 99.9% uptime</div>
+        <div class="feature"><span class="f-check">✓</span>CanonGuardian batch submission</div>
+        <div class="feature"><span class="f-check">✓</span>Priority support</div>
+      </div>
+      <div class="plan-footer">
+        <a class="plan-btn plan-btn-ghost" href="https://buy.stripe.com/INSTITUTION_PLACEHOLDER" id="institution-btn">
+          Subscribe to Institution →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee">
+    <strong>7-day refund guarantee</strong> · Cancel anytime · API key delivered by email within 5 minutes of payment<br>
+    After payment, you will be redirected to your dashboard with your API key pre-loaded.
+  </div>
+
+  <div class="faq">
+    <div class="faq-title">Common Questions</div>
+    <div class="faq-item">
+      <div class="faq-q">What is an API key and why do I need one?</div>
+      <div class="faq-a">Your API key is a signed JWT (JSON Web Token) that authenticates your tier level. Use it as a Bearer token in any request to the CanonMind API or signal-mcp server. It grants access to the 60-entry sealed Canon KB according to your subscription tier.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What are Rule 06 works?</div>
+      <div class="faq-a">Four works in the KB are classified as Rule 06 Specialist: Andrei Rublev, The Mirror, Stalker, and Au Hasard Balthazar. These require prerequisite work completion and are only available on Canon and Institution tiers.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is signal-mcp?</div>
+      <div class="faq-a">signal-mcp is a Model Context Protocol server (github.com/Rationaloptimist140/Canonmind.com/tree/main/mcp/signal-mcp) that lets LLM agents and developer tools query the sealed 60-entry Canon KB. Install via npm and configure in Claude Desktop or Cursor.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the 60-entry cap work?</div>
+      <div class="faq-a">The Canon KB is permanently sealed at 60 entries under Constant 08. New works can only enter by displacing an existing entry through formal CanonGuardian batch review. The cap is a design decision, not a technical limitation — it is the platform's core quality guarantee.</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="f-logo">CanonMind</div>
+  <div class="f-meta">canonmind.com/subscribe · Powered by Stripe<br>KB: cmqs8ogt107yl07ads5pr3whq · 60/60 Sealed</div>
+</footer>
+
+<script>
+// Anchor highlight from URL hash
+const hash = window.location.hash.slice(1);
+if (hash && document.getElementById(hash)) {
+  document.getElementById(hash).style.borderColor = "var(--gold)";
+  setTimeout(() => document.getElementById(hash).scrollIntoView({behavior:"smooth"}), 100);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CanonMind — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#09090A;--bg-2:#0F0F0E;--bg-3:#161614;--cream:#F2EDDF;--c60:rgba(242,237,223,0.6);--c40:rgba(242,237,223,0.4);--c20:rgba(242,237,223,0.2);--c08:rgba(242,237,223,0.08);--gold:#C4922A;--g30:rgba(196,146,42,0.3);--g10:rgba(196,146,42,0.1);--green:#3A7A5A;--gn15:rgba(58,122,90,0.15);--red:#8B3A3A;--border:rgba(242,237,223,0.07);--border-2:rgba(242,237,223,0.13)}
+    html{font-size:16px}
+    body{background:var(--bg);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+    nav{height:52px;padding:0 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(9,9,10,0.96);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .nav-logo{font-family:'Cormorant Garant',serif;font-size:1.1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream)}
+    .nav-right{display:flex;align-items:center;gap:16px}
+    .nav-status{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--c40)}
+    .nav-logout{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);cursor:pointer;background:none;border:none;padding:6px 12px;border:1px solid rgba(139,58,58,0.3);transition:background 0.2s}
+    .nav-logout:hover{background:rgba(139,58,58,0.1)}
+    main{max-width:900px;margin:0 auto;padding:48px 6%}
+    /* LOGIN STATE */
+    .login-state{text-align:center;padding:80px 20px}
+    .ls-icon{font-family:'Cormorant Garant',serif;font-size:4rem;color:var(--gold);margin-bottom:16px}
+    .ls-title{font-family:'Cormorant Garant',serif;font-size:2rem;font-weight:700;color:var(--cream);margin-bottom:10px}
+    .ls-sub{font-size:0.95rem;color:var(--c60);font-weight:300;margin-bottom:32px}
+    .ls-input{width:100%;max-width:540px;padding:14px 16px;background:var(--bg-3);border:1px solid var(--border-2);color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:0.75rem;outline:none;margin-bottom:10px}
+    .ls-input::placeholder{color:var(--c40)}
+    .ls-input:focus{border-color:var(--g30)}
+    .btn{padding:12px 28px;background:var(--gold);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s}
+    .btn:hover{background:#d4a030}
+    .btn-ghost{padding:12px 20px;background:transparent;color:var(--c60);font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--border);cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.2s}
+    .btn-ghost:hover{border-color:var(--g30);color:var(--gold)}
+    .ls-or{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--c40);margin:14px 0}
+    /* DASHBOARD STATE */
+    .dash{display:none}
+    .eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+    .page-title{font-family:'Cormorant Garant',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--cream);margin-bottom:32px}
+    /* TIER BADGE */
+    .tier-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--g30);background:var(--g10);font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+    .tier-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+    /* STAT GRID */
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:24px 0}
+    .stat-box{background:var(--bg-3);border:1px solid var(--border);padding:20px 18px}
+    .sb-num{font-family:'Cormorant Garant',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
+    .sb-label{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--c40)}
+    .sb-sub{font-size:0.72rem;color:var(--c40);margin-top:3px;font-weight:300}
+    /* API KEY SECTION */
+    .section{background:var(--bg-3);border:1px solid var(--border);margin-bottom:2px}
+    .section-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .section-title{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold)}
+    .section-body{padding:18px 20px}
+    .key-display{background:var(--bg);border:1px solid var(--border-2);padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--cream);letter-spacing:0.04em;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+    .key-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .key-masked{color:var(--c40)}
+    .copy-btn{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:var(--g10);border:1px solid var(--g30);padding:5px 10px;cursor:pointer;flex-shrink:0;transition:background 0.2s}
+    .copy-btn:hover{background:var(--g30)}
+    .key-note{font-size:0.75rem;color:var(--c40);font-weight:300}
+    .key-note strong{color:var(--c60);font-weight:500}
+    /* USAGE METER */
+    .usage-bar-wrap{margin:10px 0}
+    .usage-label{display:flex;justify-content:space-between;margin-bottom:6px}
+    .ul-text{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--c40)}
+    .ul-val{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--gold)}
+    .usage-track{height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+    .usage-fill{height:100%;background:var(--gold);border-radius:3px;transition:width 0.5s ease}
+    .usage-note{font-size:0.72rem;color:var(--c40);margin-top:6px;font-weight:300}
+    /* RULE 06 PROGRESS */
+    .r06-list{display:flex;flex-direction:column;gap:4px}
+    .r06-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+    .r06-item:last-child{border-bottom:none}
+    .r06-title{font-family:'Cormorant Garant',serif;font-size:0.92rem;color:var(--cream);font-weight:600}
+    .r06-meta{font-size:0.72rem;color:var(--c40);font-weight:300}
+    .r06-status{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;padding:3px 8px;border:1px solid}
+    .r06-locked{color:var(--red);border-color:rgba(139,58,58,0.4)}
+    .r06-ready{color:var(--gold);border-color:var(--g30)}
+    .r06-complete{color:var(--green);border-color:rgba(58,122,90,0.4)}
+    /* UPGRADE PROMPT */
+    .upgrade-prompt{background:var(--g10);border:1px solid var(--g30);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+    .up-text{font-size:0.85rem;color:var(--c60);font-weight:300}
+    .up-text strong{color:var(--cream);font-weight:500}
+    footer{padding:28px 6%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-top:60px}
+    .f-logo{font-family:'Cormorant Garant',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--c40)}
+    .f-meta{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:rgba(242,237,223,0.15);text-align:right;line-height:1.7}
+    @media(max-width:700px){.stat-grid{grid-template-columns:1fr 1fr}.upgrade-prompt{flex-direction:column;gap:12px}footer{flex-direction:column;gap:10px;text-align:center}.f-meta{text-align:center}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">CanonMind</div>
+  <div class="nav-right">
+    <span class="nav-status" id="nav-status">Not authenticated</span>
+    <button class="nav-logout" id="logout-btn" style="display:none" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- LOGIN STATE -->
+<main>
+  <div id="login-state" class="login-state">
+    <div class="ls-icon">🔑</div>
+    <div class="ls-title">Access Your Dashboard</div>
+    <p class="ls-sub">Enter your CanonMind API key to view your subscription, usage, and Rule 06 path progress.</p>
+    <div>
+      <input class="ls-input" id="token-input" type="password"
+             placeholder="sig_eyJ... or can_eyJ... or inst_eyJ...">
+      <br>
+      <button class="btn" onclick="authenticate()">Authenticate →</button>
+    </div>
+    <div class="ls-or">— or —</div>
+    <a class="btn-ghost" href="/subscribe">Subscribe to get your API key</a>
+    <p style="margin-top:20px;font-size:0.72rem;color:var(--c40);font-weight:300">
+      Your API key was emailed after payment. Check for an email from deploy@canonmind.com.
+    </p>
+  </div>
+
+  <!-- DASHBOARD STATE -->
+  <div id="dash-state" class="dash">
+    <div class="eyebrow">canonmind.com/dashboard</div>
+    <div id="tier-badge" class="tier-badge"><div class="tier-dot"></div><span id="tier-name">Signal</span> Tier</div>
+    <h1 class="page-title" id="welcome-title">Your Canon Access</h1>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="sb-num" id="stat-tier">1</div>
+        <div class="sb-label">Tier Level</div>
+        <div class="sb-sub" id="stat-tier-name">Signal</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-num" id="stat-usage">—</div>
+        <div class="sb-label">API Calls Today</div>
+        <div class="sb-sub" id="stat-limit">of 100 limit</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-num" id="stat-ports">3</div>
+        <div class="sb-label">Active Ports</div>
+        <div class="sb-sub" id="stat-ports-list">01 · 02 · 03</div>
+      </div>
+    </div>
+
+    <!-- API KEY -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">API Key</span>
+        <span id="key-status" style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--green)">● Active</span>
+      </div>
+      <div class="section-body">
+        <div class="key-display">
+          <span class="key-text key-masked" id="key-display">••••••••••••••••••••••••••••••••</span>
+          <button class="copy-btn" id="reveal-btn" onclick="toggleKey()">Reveal</button>
+          <button class="copy-btn" onclick="copyKey()">Copy</button>
+        </div>
+        <p class="key-note">Use as: <strong>Authorization: Bearer {your_key}</strong> · Endpoint: <strong>canonmind.com/api/verify</strong></p>
+      </div>
+    </div>
+
+    <!-- USAGE METER -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">Daily Usage — Token Bucket</span>
+        <span id="usage-reset" style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--c40)">Resets at midnight UTC</span>
+      </div>
+      <div class="section-body">
+        <div class="usage-bar-wrap">
+          <div class="usage-label">
+            <span class="ul-text">API Calls</span>
+            <span class="ul-val" id="usage-fraction">—/—</span>
+          </div>
+          <div class="usage-track"><div class="usage-fill" id="usage-bar" style="width:0%"></div></div>
+          <div class="usage-note" id="usage-note">Checking usage...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 06 PATH PROGRESS -->
+    <div class="section" id="rule06-section">
+      <div class="section-head">
+        <span class="section-title">Rule 06 Path Progress</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--c40)">cmqs8ogt107yl07ads5pr3whq</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:0.82rem;color:var(--c60);font-weight:300;margin-bottom:14px">
+          Rule 06 works require prerequisite completion. Mark paths done to unlock specialist streams.
+        </p>
+        <div class="r06-list" id="r06-list"></div>
+      </div>
+    </div>
+
+    <!-- UPGRADE PROMPT (shown for Tier 1 only) -->
+    <div class="upgrade-prompt" id="upgrade-prompt">
+      <div class="up-text">You're on <strong>Signal tier</strong>. Upgrade to <strong>Canon ($49/mo)</strong> to unlock all ports, Rule 06 works, and unlimited API calls.</div>
+      <a class="btn-ghost" href="/subscribe#canon">Upgrade →</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="f-logo">CanonMind</div>
+  <div class="f-meta">canonmind.com/dashboard<br>KB: cmqs8ogt107yl07ads5pr3whq · 60/60 Sealed</div>
+</footer>
+
+<script>
+const KB_TABLE = "cmqs8ogt107yl07ads5pr3whq";
+let currentToken = null;
+let keyRevealed = false;
+let userData = null;
+
+const RULE06_WORKS = [
+  { title: "Andrei Rublev",      prereq: null,                           paths: [2] },
+  { title: "The Mirror",         prereq: "Andrei Rublev",                paths: [] },
+  { title: "Stalker",            prereq: "Path 05 (Humanity vs Tech)",   paths: [5] },
+  { title: "Au Hasard Balthazar",prereq: "Bicycle Thieves",              paths: [] },
+];
+
+const TIER_CONFIG = {
+  1: { name:"Signal",      ports:[1,2,3],      limit:100,         rule06:false },
+  2: { name:"Canon",       ports:[1,2,3,4,5,7],limit:null,        rule06:true  },
+  3: { name:"Institution", ports:[1,2,3,4,5,6,7],limit:null,      rule06:true  },
+};
+
+function logout() {
+  localStorage.removeItem("canon_token");
+  currentToken = null;
+  userData = null;
+  document.getElementById("login-state").style.display = "block";
+  document.getElementById("dash-state").style.display = "none";
+  document.getElementById("nav-status").textContent = "Not authenticated";
+  document.getElementById("logout-btn").style.display = "none";
+}
+
+async function authenticate() {
+  const input = document.getElementById("token-input").value.trim();
+  if (!input) return;
+  currentToken = input;
+  localStorage.setItem("canon_token", input);
+  await loadDashboard(input);
+}
+
+async function loadDashboard(token) {
+  // Verify token via API
+  let verified = false;
+  let tierData = null;
+
+  try {
+    const resp = await fetch("/api/verify", {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (resp.ok) {
+      tierData = await resp.json();
+      verified = tierData.authorized;
+    }
+  } catch (e) {
+    // API not available in static mode — decode JWT client-side for display
+    verified = true;
+    const parts = token.replace(/^(sig|can|inst)_/, "").split(".");
+    if (parts.length === 3) {
+      try {
+        const payload = JSON.parse(atob(parts[1]));
+        tierData = {
+          authorized: true,
+          tier:       payload.tier ?? 1,
+          tier_name:  TIER_CONFIG[payload.tier ?? 1]?.name ?? "Signal",
+          ports:      TIER_CONFIG[payload.tier ?? 1]?.ports ?? [1,2,3],
+          rule06:     TIER_CONFIG[payload.tier ?? 1]?.rule06 ?? false,
+          daily_limit: TIER_CONFIG[payload.tier ?? 1]?.limit ?? 100,
+        };
+      } catch { verified = false; }
+    }
+  }
+
+  if (!verified || !tierData) {
+    alert("Invalid or expired API key. Please check your key and try again.");
+    return;
+  }
+
+  userData = tierData;
+  renderDashboard(tierData, token);
+}
+
+function renderDashboard(data, token) {
+  const tier   = data.tier ?? 1;
+  const config = TIER_CONFIG[tier] ?? TIER_CONFIG[1];
+
+  document.getElementById("login-state").style.display = "none";
+  document.getElementById("dash-state").style.display = "block";
+  document.getElementById("nav-status").textContent = `${config.name} · Active`;
+  document.getElementById("logout-btn").style.display = "block";
+  document.getElementById("tier-name").textContent = config.name;
+  document.getElementById("welcome-title").textContent = `${config.name} Access · Active`;
+  document.getElementById("stat-tier").textContent = tier;
+  document.getElementById("stat-tier-name").textContent = config.name;
+  document.getElementById("stat-ports").textContent = config.ports.length;
+  document.getElementById("stat-ports-list").textContent = config.ports.map(p => `0${p}`).join(" · ");
+
+  // Usage
+  const limit = config.limit ?? 0;
+  const used  = data.used ?? 0;
+  if (!config.limit) {
+    document.getElementById("stat-usage").textContent = "∞";
+    document.getElementById("stat-limit").textContent = "Unlimited";
+    document.getElementById("usage-fraction").textContent = `${used} calls today`;
+    document.getElementById("usage-bar").style.width = "4%";
+    document.getElementById("usage-note").textContent = "Unlimited tier — no daily cap on API calls.";
+  } else {
+    document.getElementById("stat-usage").textContent = used;
+    document.getElementById("stat-limit").textContent = `of ${limit} limit`;
+    document.getElementById("usage-fraction").textContent = `${used}/${limit}`;
+    const pct = Math.min(100, (used / limit) * 100);
+    document.getElementById("usage-bar").style.width = `${pct}%`;
+    document.getElementById("usage-note").textContent =
+      pct > 80 ? `⚠ ${100 - Math.round(pct)}% remaining today. Resets at midnight UTC.`
+               : `${limit - used} calls remaining today. Resets at midnight UTC.`;
+  }
+
+  // Rule 06 progress (stored in localStorage)
+  const progress = JSON.parse(localStorage.getItem("r06_progress") ?? "{}");
+  const r06List  = document.getElementById("r06-list");
+  r06List.innerHTML = RULE06_WORKS.map(w => {
+    const done    = !!progress[w.title];
+    const prereqOk= !w.prereq || !!progress[w.prereq];
+    const status  = done ? "complete" : prereqOk ? "ready" : "locked";
+    const label   = done ? "✓ Watched" : prereqOk ? "Ready to unlock" : `⚑ Complete "${w.prereq}" first`;
+    return `<div class="r06-item">
+      <div>
+        <div class="r06-title">${w.title}</div>
+        ${w.prereq ? `<div class="r06-meta">On-ramp: ${w.prereq}</div>` : '<div class="r06-meta">Founding Rule 06 precedent</div>'}
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        ${status==="ready"&&!done?`<button onclick="markWatched('${w.title}')" style="font-family:'JetBrains Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;background:none;border:1px solid var(--g30);color:var(--gold);padding:3px 8px;cursor:pointer">Mark watched</button>`:""}
+        <span class="r06-status r06-${status}">${label}</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Upgrade prompt
+  document.getElementById("upgrade-prompt").style.display = tier === 1 ? "flex" : "none";
+
+  // Rule 06 section visibility
+  document.getElementById("rule06-section").style.display =
+    data.rule06 ? "block" : "block"; // always show so tier 1 sees what they're missing
+}
+
+function markWatched(title) {
+  const progress = JSON.parse(localStorage.getItem("r06_progress") ?? "{}");
+  progress[title] = true;
+  localStorage.setItem("r06_progress", JSON.stringify(progress));
+  if (userData) renderDashboard(userData, currentToken);
+}
+
+function toggleKey() {
+  const display = document.getElementById("key-display");
+  const btn     = document.getElementById("reveal-btn");
+  if (!keyRevealed) {
+    const trimmed = currentToken.length > 40
+      ? currentToken.slice(0,24) + "..." + currentToken.slice(-8)
+      : currentToken;
+    display.textContent = trimmed;
+    display.classList.remove("key-masked");
+    btn.textContent = "Hide";
+    keyRevealed = true;
+  } else {
+    display.textContent = "••••••••••••••••••••••••••••••••";
+    display.classList.add("key-masked");
+    btn.textContent = "Reveal";
+    keyRevealed = false;
+  }
+}
+
+function copyKey() {
+  if (!currentToken) return;
+  navigator.clipboard.writeText(currentToken).then(() => {
+    const btn = document.querySelector('[onclick="copyKey()"]');
+    btn.textContent = "Copied ✓";
+    setTimeout(() => btn.textContent = "Copy", 1500);
+  });
+}
+
+// Auto-load from localStorage or URL param
+window.addEventListener("DOMContentLoaded", () => {
+  const urlToken = new URLSearchParams(window.location.search).get("token");
+  if (urlToken) {
+    localStorage.setItem("canon_token", urlToken);
+    history.replaceState({}, "", "/dashboard");
+    currentToken = urlToken;
+    loadDashboard(urlToken);
+    return;
+  }
+  const stored = localStorage.getItem("canon_token");
+  if (stored) {
+    currentToken = stored;
+    loadDashboard(stored);
+  }
+});
+</script>
+</body>
+</html>

@@ -2,10 +2,14 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/manual",  "destination": "/manual/index.html"  },
-    { "source": "/manual/", "destination": "/manual/index.html"  },
-    { "source": "/invest",  "destination": "/invest/index.html"  },
-    { "source": "/invest/", "destination": "/invest/index.html"  }
+    { "source": "/manual",     "destination": "/manual/index.html"     },
+    { "source": "/manual/",    "destination": "/manual/index.html"     },
+    { "source": "/invest",     "destination": "/invest/index.html"     },
+    { "source": "/invest/",    "destination": "/invest/index.html"     },
+    { "source": "/dashboard",  "destination": "/dashboard/index.html"  },
+    { "source": "/dashboard/", "destination": "/dashboard/index.html"  },
+    { "source": "/subscribe",  "destination": "/subscribe/index.html"  },
+    { "source": "/subscribe/", "destination": "/subscribe/index.html"  }
   ],
   "headers": [
     {
@@ -13,14 +17,15 @@
       "headers": [
         { "key": "X-Frame-Options",        "value": "DENY"        },
         { "key": "X-Content-Type-Options",  "value": "nosniff"    },
-        { "key": "X-Robots-Tag",            "value": "index, follow" },
         { "key": "Cache-Control",           "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]
     },
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache" }
+        { "key": "Cache-Control", "value": "no-store, no-cache" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://canonmind.com" },
+        { "key": "Access-Control-Allow-Headers", "value": "Authorization, Content-Type" }
       ]
     }
   ]
