@@ -220,6 +220,18 @@
     .ms-icon{font-family:'Cormorant Garant',serif;font-size:2.4rem;color:var(--green);margin-bottom:10px}
     .ms-title{font-family:'Cormorant Garant',serif;font-size:1.4rem;font-weight:600;color:var(--cream);margin-bottom:6px}
     .ms-sub{font-size:0.82rem;color:var(--c50);font-weight:300}
+    /* ── WHAT YOU GET ── */
+    .features-section{padding:80px 6%;border-bottom:1px solid var(--border);background:var(--bg-2)}
+    .features-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:40px}
+    .feat-card{background:var(--bg-3);border:1px solid var(--border);padding:28px 22px;display:flex;flex-direction:column;gap:14px;transition:border-color 0.2s}
+    .feat-card:hover{border-color:var(--g40)}
+    .feat-num{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.18em;color:var(--gold);display:flex;align-items:center;justify-content:space-between}
+    .feat-num-line{flex:1;height:1px;background:rgba(196,146,42,0.2);margin-left:10px}
+    .feat-title{font-family:'Cormorant Garant',serif;font-size:1.05rem;font-weight:600;color:var(--cream);line-height:1.25}
+    .feat-copy{font-size:0.78rem;color:var(--c50);font-weight:300;line-height:1.65;flex:1}
+    @media(max-width:1024px){.features-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:680px){.features-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:420px){.features-grid{grid-template-columns:1fr}}
     /* ── FOOTER CSS STARTS ── */
     .site-footer{padding:52px 6%;border-top:1px solid var(--border)}
     .sf-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px}
@@ -561,6 +573,48 @@
     </div>
   </div>
 </section>
+
+<!-- WHAT YOU GET -->
+<section class="features-section">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">What You Get</div>
+    <h2 class="sec-title">Five things. No filler.</h2>
+    <div class="features-grid">
+
+      <div class="feat-card">
+        <div class="feat-num">01<div class="feat-num-line"></div></div>
+        <div class="feat-title">60 Pre-Verified Works</div>
+        <div class="feat-copy">A sealed library of films, music, literature, and visual art that passed the CanonMind quality gate.</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-num">02<div class="feat-num-line"></div></div>
+        <div class="feat-title">Cognitive Companion Files</div>
+        <div class="feat-copy">Each work includes structured notes, timestamps, and interpretive markers that turn watching or listening into guided learning.</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-num">03<div class="feat-num-line"></div></div>
+        <div class="feat-title">Verified Access Routes</div>
+        <div class="feat-copy">Every title routes to a legal platform so you can find it instantly instead of searching across the web.</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-num">04<div class="feat-num-line"></div></div>
+        <div class="feat-title">Learning Paths</div>
+        <div class="feat-copy">Works can be taken alone or in sequence through curated paths for individuals, families, and educators.</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-num">05<div class="feat-num-line"></div></div>
+        <div class="feat-title">Canon Audit Layer</div>
+        <div class="feat-copy">Every inclusion is traceable to a visible scoring logic, so the library stays rigorous instead of arbitrary.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
 <!-- WAITLIST MODAL -->
 <div class="modal-overlay" id="waitlist-modal" onclick="closeModalOutside(event)">
