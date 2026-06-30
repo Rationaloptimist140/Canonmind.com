@@ -234,6 +234,18 @@
     .sf-kb-text{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--c30)}
     @media(max-width:1000px){.hero-inner{grid-template-columns:1fr;gap:40px}.streaming-demo{grid-template-columns:1fr}.sf-inner{grid-template-columns:1fr}.collection-grid{grid-template-columns:repeat(2,1fr)}.paths-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:640px){.hero-input-row{flex-direction:column}.hero-input-row input{border-right:1px solid var(--border-2);border-bottom:none}.collection-grid{grid-template-columns:1fr}.paths-grid{grid-template-columns:1fr}.pillars{grid-template-columns:1fr}.nav-right .nav-status{display:none}}
+
+    /* ── NAV MOBILE FIX ── */
+    .nav-cta{white-space:nowrap}
+    @media(max-width:768px){
+      .nav-domain{display:none}
+      .nav-status{display:none}
+      .nav-cta{font-size:0.56rem;padding:7px 12px;letter-spacing:0.08em}
+    }
+    @media(max-width:400px){
+      .nav-cta{font-size:0.52rem;padding:6px 10px;letter-spacing:0.06em}
+      .nav-logo{font-size:0.95rem}
+    }
   </style>
 </head>
 <body>
