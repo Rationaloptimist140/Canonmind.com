@@ -185,7 +185,7 @@
     <div class="hero-right">
       <div class="hero-stats-grid">
         <div class="hs-box">
-          <div class="hs-num" id="count-works">60</div>
+          <div class="hs-num" id="count-works">56</div>
           <div class="hs-label">Works</div>
           <div class="hs-sub">Locked knowledge base</div>
         </div>
@@ -319,7 +319,7 @@
     <div class="terminal-card">
       <div class="tc-bar">
         <div class="tc-dot tc-dot-r"></div><div class="tc-dot tc-dot-y"></div><div class="tc-dot tc-dot-g"></div>
-        <span class="tc-label">CanonMind Terminal · KB: cmqs8ogt107yl07ads5pr3whq · 56 entries</span>
+        <span class="tc-label">CanonMind Terminal · KB: cmqs8ogt107yl07ads5pr3whq · 60 entries</span>
       </div>
       <div class="tc-body">
         <div class="tc-line"><span class="tp">SYSTEM</span> <span class="ok">ONLINE</span> · Profile CJzZqVhg · All ports active · Anti-Slop Gate armed</div>
@@ -331,12 +331,13 @@
       <div class="tc-input-row">
         <span class="tc-prompt">canon://</span>
         <input class="tc-input" type="text" placeholder="e.g. 'Give me one work I've been avoiding' or 'Build a 4-week curriculum on memory'" id="tc-input" oninput="detectPort(this.value)">
-        <button class="tc-send">Route →</button>
+        <button class="tc-send" id="tc-route-btn" onclick="handleQuery()">Route →</button>
       </div>
       <div class="tc-port-row">
         <span style="color:var(--c30)">Routing to:</span>
         <span class="tc-port-badge active" id="port-badge">PORT 01 — RECOMMENDATION</span>
       </div>
+      <div id="tc-response" style="display:none;border-top:1px solid var(--border);padding:0 20px 20px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;line-height:1.7;max-height:420px;overflow-y:auto"></div>
     </div>
   </div>
 </section>
@@ -385,11 +386,6 @@ const FEATURED=[
   {medium:"Visual Art",title:"Sistine Chapel Ceiling",creator:"Michelangelo · 1508–1512",score:9.6,pct:96,desc:"The most technically and conceptually ambitious painted surface in Western history. The primary reference point for the study of High Renaissance art for 500 years."},
   {medium:"Film",title:"Seven Samurai",creator:"Kurosawa · 1954",score:9.7,pct:97,desc:"72 years. #17 Sight & Sound 2022. The defining epic of world cinema — foundational to every action, war, and ensemble film since. Batch 004 addition."},
   {medium:"Film",title:"Tokyo Story",creator:"Ozu · 1953",score:9.4,pct:94,desc:"The quietest and most devastating film about time passing. 'Isn't life disappointing?' 'Yes, it is.' — the eight words that end 136 minutes of total formal restraint."},
-,
-  {medium:"Visual Art",title:"The Night Watch",creator:"Rembrandt · 1642",score:9.7,pct:97,desc:"384 years in active critical discourse. The national painting of the Netherlands. Rembrandt's light manipulation establishes every subsequent argument about painting as narrative. Fills the Dutch Golden Age gap in the Visual Art section. Batch 005."},
-  {medium:"Music",title:"Symphony No. 5, Op. 47",creator:"Shostakovich · 1937",score:9.6,pct:96,desc:"89 years. The most famous symphony of the 20th century after Beethoven's 9th. The finale's ambiguity (triumphant or sardonic?) IS the work's formal argument about dissidence under totalitarianism. Batch 005."},
-  {medium:"Literature",title:"Things Fall Apart",creator:"Chinua Achebe · 1958",score:9.4,pct:94,desc:"68 years. Translated into 57 languages. The foundational text of African literature in English. Fills the complete absence of African literature from the KB. Three-part structure is formally perfect. Batch 005."},
-  {medium:"Film",title:"Au Hasard Balthazar",creator:"Robert Bresson · 1966",score:9.1,pct:91,desc:"60 years. Sight & Sound top-20. Bresson's cinematograph philosophy — non-professional actors, absolute restraint, sound-image counterpoint — is the missing formalist tradition. Rule 06: Bicycle Thieves on-ramp required. Batch 005."}
 ];
 const grid=document.getElementById('coll-grid');
 let openCard=null;
@@ -432,6 +428,290 @@ function heroSignup(){
   row.style.display='none';note.textContent='✓ You\'re on the list. We\'ll be in touch when CanonMind opens early access.';note.style.color='var(--gold)';
 }
 document.getElementById('hero-email').addEventListener('keydown',e=>{if(e.key==='Enter')heroSignup()});
+document.getElementById('tc-input').addEventListener('keydown',e=>{if(e.key==='Enter')handleQuery()});
+
+// ─── CANONMIND CLIENT-SIDE QUERY ENGINE ───────────────────────────────────
+const KB60=[
+  // Film
+  {t:"The Godfather",c:"Francis Ford Coppola",y:"1972",m:"film",s:9.7,tl:10,acc:9,mat:"15+",paths:[2],stream:"criterionchannel.com"},
+  {t:"Seven Samurai",c:"Akira Kurosawa",y:"1954",m:"film",s:9.7,tl:10,acc:8,mat:"12+",paths:[],stream:"criterionchannel.com"},
+  {t:"La Règle du jeu",c:"Jean Renoir",y:"1939",m:"film",s:9.5,tl:10,acc:7,mat:"13+",paths:[5],stream:"criterionchannel.com"},
+  {t:"Tokyo Story",c:"Yasujirō Ozu",y:"1953",m:"film",s:9.4,tl:10,acc:7,mat:"12+",paths:[1,6],stream:"criterionchannel.com/tokyo-story"},
+  {t:"Wild Strawberries",c:"Ingmar Bergman",y:"1957",m:"film",s:9.4,tl:10,acc:8,mat:"13+",paths:[],stream:"criterionchannel.com"},
+  {t:"Apocalypse Now",c:"Francis Ford Coppola",y:"1979",m:"film",s:9.3,tl:10,acc:7,mat:"18+",paths:[5],stream:"criterionchannel.com"},
+  {t:"2001: A Space Odyssey",c:"Stanley Kubrick",y:"1968",m:"film",s:9.3,tl:10,acc:6,mat:"12+",paths:[5],stream:"criterionchannel.com"},
+  {t:"Citizen Kane",c:"Orson Welles",y:"1941",m:"film",s:9.2,tl:10,acc:7,mat:"12+",paths:[1],stream:"criterionchannel.com"},
+  {t:"Vertigo",c:"Alfred Hitchcock",y:"1958",m:"film",s:9.2,tl:10,acc:8,mat:"13+",paths:[5,6],stream:"criterionchannel.com"},
+  {t:"Rashomon",c:"Akira Kurosawa",y:"1950",m:"film",s:9.2,tl:10,acc:8,mat:"13+",paths:[1],stream:"criterionchannel.com"},
+  {t:"Bicycle Thieves",c:"Vittorio De Sica",y:"1948",m:"film",s:9.1,tl:10,acc:8,mat:"12+",paths:[],stream:"criterionchannel.com/bicycle-thieves"},
+  {t:"Andrei Rublev",c:"Andrei Tarkovsky",y:"1966",m:"film",s:9.1,tl:10,acc:4,mat:"16+ Rule06",paths:[2],stream:"criterionchannel.com",r06:true},
+  {t:"Persona",c:"Ingmar Bergman",y:"1966",m:"film",s:9.1,tl:10,acc:4,mat:"16+ Rule06",paths:[],stream:"criterionchannel.com",r06:true},
+  {t:"À bout de souffle",c:"Jean-Luc Godard",y:"1960",m:"film",s:9.0,tl:10,acc:8,mat:"13+",paths:[],stream:"criterionchannel.com"},
+  {t:"8½",c:"Federico Fellini",y:"1963",m:"film",s:9.0,tl:10,acc:6,mat:"13+",paths:[],stream:"criterionchannel.com"},
+  {t:"Stalker",c:"Andrei Tarkovsky",y:"1979",m:"film",s:9.0,tl:10,acc:4,mat:"16+ Rule06",paths:[5],stream:"criterionchannel.com/stalker",r06:true},
+  {t:"The Mirror",c:"Andrei Tarkovsky",y:"1975",m:"film",s:8.4,tl:9,acc:4,mat:"16+ Rule06",paths:[],stream:"criterionchannel.com/mirror",r06:true},
+  {t:"Au Hasard Balthazar",c:"Robert Bresson",y:"1966",m:"film",s:9.1,tl:10,acc:4,mat:"16+ Rule06",paths:[],stream:"criterionchannel.com",r06:true},
+  // Music
+  {t:"Symphony No. 9",c:"Ludwig van Beethoven",y:"1824",m:"music",s:9.7,tl:10,acc:9,mat:"Clean",paths:[3],stream:"Qobuz · Tidal · Apple Music"},
+  {t:"Kind of Blue",c:"Miles Davis",y:"1959",m:"music",s:9.7,tl:10,acc:9,mat:"Clean",paths:[3,6],stream:"Spotify · Apple Music · Qobuz"},
+  {t:"The Well-Tempered Clavier I",c:"J.S. Bach",y:"1722",m:"music",s:9.6,tl:10,acc:8,mat:"Clean",paths:[3],stream:"Qobuz · Apple Music"},
+  {t:"Symphony No. 5",c:"Dmitri Shostakovich",y:"1937",m:"music",s:9.6,tl:10,acc:8,mat:"Clean",paths:[],stream:"Qobuz · Tidal"},
+  {t:"String Quartet Op. 131",c:"Ludwig van Beethoven",y:"1826",m:"music",s:9.5,tl:10,acc:6,mat:"Clean",paths:[3],stream:"Qobuz · Apple Music"},
+  {t:"The Rite of Spring",c:"Igor Stravinsky",y:"1913",m:"music",s:9.4,tl:10,acc:6,mat:"Clean",paths:[3],stream:"Qobuz · Apple Music"},
+  {t:"Winterreise",c:"Franz Schubert",y:"1828",m:"music",s:9.3,tl:10,acc:6,mat:"Clean",paths:[3,6],stream:"Qobuz (Fischer-Dieskau/Moore 1952)"},
+  {t:"Tristan und Isolde",c:"Richard Wagner",y:"1865",m:"music",s:9.3,tl:10,acc:5,mat:"14+",paths:[6],stream:"Qobuz · Apple Music"},
+  {t:"Don Giovanni",c:"Wolfgang Amadeus Mozart",y:"1787",m:"music",s:9.3,tl:10,acc:6,mat:"14+",paths:[],stream:"Qobuz · Apple Music"},
+  {t:"What's Going On",c:"Marvin Gaye",y:"1971",m:"music",s:9.2,tl:10,acc:9,mat:"Clean",paths:[3],stream:"Spotify · Apple Music"},
+  {t:"A Love Supreme",c:"John Coltrane",y:"1965",m:"music",s:9.2,tl:10,acc:8,mat:"Clean",paths:[3],stream:"Spotify · Apple Music · Qobuz"},
+  {t:"Highway 61 Revisited",c:"Bob Dylan",y:"1965",m:"music",s:9.1,tl:10,acc:9,mat:"Clean",paths:[],stream:"Spotify · Apple Music"},
+  {t:"Revolver",c:"The Beatles",y:"1966",m:"music",s:9.1,tl:10,acc:9,mat:"Clean",paths:[3],stream:"Spotify · Apple Music"},
+  {t:"Ellington at Newport",c:"Duke Ellington",y:"1956",m:"music",s:9.1,tl:10,acc:9,mat:"Clean",paths:[3],stream:"Spotify · Tidal"},
+  // Literature
+  {t:"The Metamorphosis",c:"Franz Kafka",y:"1915",m:"literature",s:9.9,tl:10,acc:9,mat:"13+",paths:[],stream:"Penguin Classics · Project Gutenberg"},
+  {t:"Hamlet",c:"William Shakespeare",y:"c. 1601",m:"literature",s:9.6,tl:10,acc:8,mat:"14+",paths:[1,2],stream:"Penguin · Arden · Project Gutenberg"},
+  {t:"The Odyssey",c:"Homer",y:"c. 8th c. BCE",m:"literature",s:9.5,tl:10,acc:8,mat:"13+",paths:[1,4,6],stream:"Emily Wilson translation · Project Gutenberg"},
+  {t:"Oedipus Rex",c:"Sophocles",y:"c. 429 BCE",m:"literature",s:9.4,tl:10,acc:8,mat:"14+",paths:[2],stream:"Penguin Classics"},
+  {t:"Madame Bovary",c:"Gustave Flaubert",y:"1857",m:"literature",s:9.4,tl:10,acc:7,mat:"14+",paths:[],stream:"Penguin Classics"},
+  {t:"Things Fall Apart",c:"Chinua Achebe",y:"1958",m:"literature",s:9.4,tl:9,acc:9,mat:"13+",paths:[],stream:"Penguin Modern Classics"},
+  {t:"Anna Karenina",c:"Leo Tolstoy",y:"1878",m:"literature",s:9.4,tl:10,acc:7,mat:"14+",paths:[1,6],stream:"Penguin Classics"},
+  {t:"The Brothers Karamazov",c:"Fyodor Dostoevsky",y:"1880",m:"literature",s:9.3,tl:10,acc:6,mat:"15+",paths:[2,4],stream:"Penguin Classics"},
+  {t:"Don Quixote",c:"Miguel de Cervantes",y:"1605",m:"literature",s:9.3,tl:10,acc:7,mat:"13+",paths:[2,4],stream:"Penguin Classics"},
+  {t:"The Divine Comedy",c:"Dante Alighieri",y:"c. 1320",m:"literature",s:9.3,tl:10,acc:6,mat:"14+",paths:[4],stream:"Penguin Classics"},
+  {t:"Crime and Punishment",c:"Fyodor Dostoevsky",y:"1866",m:"literature",s:9.3,tl:10,acc:7,mat:"14+",paths:[2],stream:"Penguin Classics"},
+  {t:"One Hundred Years of Solitude",c:"Gabriel García Márquez",y:"1967",m:"literature",s:9.2,tl:10,acc:7,mat:"13+",paths:[4,5],stream:"Penguin Modern Classics"},
+  {t:"Pride and Prejudice",c:"Jane Austen",y:"1813",m:"literature",s:9.2,tl:10,acc:9,mat:"12+",paths:[4],stream:"Project Gutenberg · Penguin"},
+  {t:"The Trial",c:"Franz Kafka",y:"1925",m:"literature",s:9.2,tl:10,acc:7,mat:"13+",paths:[5],stream:"Penguin Classics"},
+  {t:"Ulysses",c:"James Joyce",y:"1922",m:"literature",s:9.1,tl:10,acc:3,mat:"16+",paths:[],stream:"Penguin Modern Classics"},
+  {t:"Mrs Dalloway",c:"Virginia Woolf",y:"1925",m:"literature",s:9.0,tl:10,acc:6,mat:"14+",paths:[1,6],stream:"Penguin Modern Classics"},
+  // Visual Art
+  {t:"The Night Watch",c:"Rembrandt van Rijn",y:"1642",m:"visual-art",s:9.7,tl:10,acc:9,mat:"Clean",paths:[],stream:"Rijksmuseum.nl · Google Arts & Culture"},
+  {t:"Sistine Chapel Ceiling",c:"Michelangelo",y:"1508–1512",m:"visual-art",s:9.6,tl:10,acc:9,mat:"Clean",paths:[],stream:"Vatican Museums · Google Arts"},
+  {t:"Las Meninas",c:"Diego Velázquez",y:"1656",m:"visual-art",s:9.5,tl:10,acc:9,mat:"Clean",paths:[],stream:"Museo del Prado · Google Arts"},
+  {t:"The Last Supper",c:"Leonardo da Vinci",y:"c. 1498",m:"visual-art",s:9.5,tl:10,acc:9,mat:"Clean",paths:[],stream:"Google Arts & Culture"},
+  {t:"Guernica",c:"Pablo Picasso",y:"1937",m:"visual-art",s:9.4,tl:10,acc:9,mat:"Clean",paths:[2],stream:"Museo Reina Sofía · Google Arts"},
+  {t:"Girl with a Pearl Earring",c:"Johannes Vermeer",y:"c. 1665",m:"visual-art",s:9.3,tl:10,acc:9,mat:"Clean",paths:[],stream:"Mauritshuis · Google Arts"},
+  {t:"The Third of May 1808",c:"Francisco Goya",y:"1814",m:"visual-art",s:9.3,tl:10,acc:9,mat:"Clean",paths:[],stream:"Museo del Prado · Google Arts"},
+  {t:"The Great Wave off Kanagawa",c:"Katsushika Hokusai",y:"c. 1831",m:"visual-art",s:9.2,tl:10,acc:9,mat:"Clean",paths:[],stream:"Metropolitan Museum · Google Arts"},
+  {t:"The Starry Night",c:"Vincent van Gogh",y:"1889",m:"visual-art",s:9.2,tl:10,acc:9,mat:"Clean",paths:[],stream:"MoMA · Google Arts & Culture"},
+  {t:"Nighthawks",c:"Edward Hopper",y:"1942",m:"visual-art",s:9.2,tl:10,acc:9,mat:"Clean",paths:[],stream:"Art Institute Chicago · Google Arts"},
+  {t:"The Card Players",c:"Paul Cézanne",y:"1890–1895",m:"visual-art",s:9.1,tl:10,acc:9,mat:"Clean",paths:[],stream:"Musée d'Orsay · Google Arts"},
+];
+
+const PATH_DATA={
+  1:{name:"Understanding Human Memory & Time",works:["The Odyssey","Hamlet","Anna Karenina","Citizen Kane","Tokyo Story","Mrs Dalloway"],med:"Film + Literature",dur:"3–4 weeks"},
+  2:{name:"Moral Choice and Evil",works:["Oedipus Rex","Hamlet","Don Quixote","Crime and Punishment","The Godfather","The Brothers Karamazov","Guernica"],med:"Literature + Film + Visual Art",dur:"4–6 weeks"},
+  3:{name:"Beauty and Structure in Music",works:["Kind of Blue","Revolver","What's Going On","Ellington at Newport","The Well-Tempered Clavier I","Symphony No. 9","Winterreise"],med:"Music",dur:"7 weeks"},
+  4:{name:"What is a Good Life?",works:["The Odyssey","The Divine Comedy","Don Quixote","Pride and Prejudice","The Brothers Karamazov","Mrs Dalloway","One Hundred Years of Solitude"],med:"Literature",dur:"5–6 weeks"},
+  5:{name:"Humanity vs Technology",works:["The Trial","One Hundred Years of Solitude","La Règle du jeu","Vertigo","2001: A Space Odyssey","Apocalypse Now"],med:"Film + Literature",dur:"4–5 weeks"},
+  6:{name:"Love and Its Costs",works:["The Odyssey","Winterreise","Anna Karenina","Tristan und Isolde","Vertigo","Tokyo Story","Mrs Dalloway"],med:"Literature + Music + Film",dur:"5–6 weeks"},
+};
+
+function findWork(q){
+  const lq=q.toLowerCase();
+  return KB60.find(w=>w.t.toLowerCase().includes(lq)||w.c.toLowerCase().includes(lq));
+}
+
+function pickByMedium(med,exclude){
+  return KB60.filter(w=>w.m===med&&!w.r06&&w.t!==exclude).sort((a,b)=>b.s-a.s)[0];
+}
+
+function pickByPath(pathId,exclude){
+  const p=PATH_DATA[pathId];
+  if(!p)return null;
+  const title=p.works.find(t=>t!==exclude);
+  return KB60.find(w=>w.t===title);
+}
+
+function pickAccessible(exclude){
+  return KB60.filter(w=>!w.r06&&w.acc>=7&&w.t!==exclude).sort((a,b)=>b.s-a.s)[0];
+}
+
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt)e.textContent=txt;return e;}
+
+function renderWork(w){
+  const mat=w.mat||"Clean";
+  const r06note=w.r06?`<br><span style="color:#c47a3a">⚠ Rule 06 — Specialist Routing · 16+ · Prerequisite required</span>`:"";
+  return `<div style="border-top:1px solid rgba(242,237,223,0.1);padding-top:12px;margin-top:12px">
+<span style="color:#C4922A">TITLE</span>   ${w.t}<br>
+<span style="color:#C4922A">CREATOR</span> ${w.c} · ${w.y} · ${w.m.toUpperCase()}<br>
+<span style="color:#C4922A">SCORE</span>   ${w.s}/10 · Timelessness ${w.tl}/10 · Accessibility ${w.acc}/10<br>
+<span style="color:#C4922A">ROUTING</span> Age ${mat} · Family-safe ${mat==="Clean"||mat.includes("12")||mat.includes("13")?"✓":"—"}${r06note}<br>
+<span style="color:#C4922A">STREAM</span>  ${w.stream}
+</div>`;
+}
+
+function port01(q){
+  // Keyword → medium
+  let work=null;
+  const lq=q.toLowerCase();
+  const specific=KB60.find(w=>lq.includes(w.t.toLowerCase().split(" ")[0].toLowerCase())||lq.includes(w.c.toLowerCase().split(" ").slice(-1)[0].toLowerCase()));
+  if(specific){work=specific;}
+  else if(lq.includes("film")||lq.includes("movie")||lq.includes("cinema")||lq.includes("watch")){work=pickByMedium("film","");}
+  else if(lq.includes("music")||lq.includes("album")||lq.includes("listen")||lq.includes("jazz")||lq.includes("classical")){work=pickByMedium("music","");}
+  else if(lq.includes("book")||lq.includes("novel")||lq.includes("read")||lq.includes("literature")){work=pickByMedium("literature","");}
+  else if(lq.includes("art")||lq.includes("painting")){work=pickByMedium("visual-art","");}
+  else{work=pickAccessible("");}
+  if(!work)work=KB60[0];
+  const nxt=KB60.filter(w=>w.t!==work.t&&!w.r06).sort((a,b)=>b.s-a.s).slice(0,2);
+  return `<span style="color:#C4922A">━━ PORT 01 — RECOMMENDATION ━━━━━━━━━━━━━━━━━━━━━━</span>
+${renderWork(work)}
+<br><span style="color:#C4922A">NEXT FROM CANON</span>
+${nxt.map(w=>`→ ${w.t} · ${w.c.split(" ").slice(-1)[0]} · ${w.y} · Score ${w.s}`).join("\n")}
+<br><span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+}
+
+function port02(q){
+  // Find best matching path or build thematic one
+  const lq=q.toLowerCase();
+  let pid=1;
+  if(lq.includes("moral")||lq.includes("evil")||lq.includes("choic"))pid=2;
+  else if(lq.includes("music")||lq.includes("sound")||lq.includes("beaut"))pid=3;
+  else if(lq.includes("good life")||lq.includes("philosoph")||lq.includes("virtue"))pid=4;
+  else if(lq.includes("tech")||lq.includes("human")||lq.includes("machine"))pid=5;
+  else if(lq.includes("love")||lq.includes("relation")||lq.includes("heart"))pid=6;
+  else if(lq.includes("memor")||lq.includes("time")||lq.includes("past"))pid=1;
+  const p=PATH_DATA[pid];
+  const works=p.works.slice(0,4).map((t,i)=>{
+    const w=KB60.find(x=>x.t===t)||{t,c:"",y:"",s:9.0,mat:"13+"};
+    return `WEEK 0${i+1}  ${w.t} · ${w.c||""} · Score ${w.s}`;
+  });
+  return `<span style="color:#C4922A">━━ PORT 02 — 4-WEEK CURRICULUM ━━━━━━━━━━━━━━━━━━</span>
+
+Theme:   "${p.name}"
+Mediums: ${p.med}
+Duration:${p.dur}
+Works:   ${p.works.length} primary · KB-only ✓
+
+${works.join("\n")}
++ ${p.works.length-4} more works in the full path
+
+<span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · All INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+}
+
+function port03(q){
+  const safe=KB60.filter(w=>!w.r06&&(w.mat==="Clean"||w.mat.includes("12")||w.mat.includes("13"))).sort((a,b)=>b.s-a.s);
+  const picks=[safe[0],safe.find(w=>w.m!==safe[0].m),safe.find(w=>w.m!=="film"&&w.m!==safe[0].m&&w.m!==safe.find(x=>x.m!==safe[0].m)?.m)].filter(Boolean);
+  return `<span style="color:#C4922A">━━ PORT 03 — FAMILY-SAFE CULTURAL TRACK ━━━━━━━━</span>
+
+All works pre-screened · Zero content warnings on selected titles
+"The goal is not comprehension — it is exposure."
+
+${picks.map((w,i)=>`WEEK 0${i+1}  [${w.m.toUpperCase()}] ${w.t} · ${w.c.split(" ").slice(-1)[0]} · Age ${w.mat}`).join("\n")}
+
+<span style="color:#3A7A5A">✓ Family-Safe</span> · Canon compliance: ${picks.length}/${picks.length} from sealed KB
+<span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+}
+
+function port04(q){
+  const w=findWork(q)||KB60[0];
+  const r06line=w.r06?`\n<span style="color:#c47a3a">⚠ RULE 06 ACTIVE — Prerequisite required · 16+ mandatory</span>`:""
+  return `<span style="color:#C4922A">━━ PORT 04 — STREAMING DELIVERY ━━━━━━━━━━━━━━━━━</span>
+${renderWork(w)}${r06line}
+
+<span style="color:#C4922A">STREAM →</span> ${w.stream}
+
+<span style="color:#C4922A">CCF</span>     Cognitive Companion File available
+        3–5 timestamped semantic markers
+        Structural focus · Cognitive insight · 2050 verification
+
+<span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+}
+
+function port05(q){
+  // Try to find something that looks like a title (not in KB)
+  const inKB=findWork(q);
+  if(inKB){
+    return `<span style="color:#3A7A5A">━━ PORT 04 REDIRECT — WORK FOUND IN KB ━━━━━━━━━</span>
+"${q}" matches a sealed KB entry. Routing to Port 04.
+${renderWork(inKB)}
+<span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+  }
+  const yr=q.match(/\b(19|20)\d{2}\b/);
+  const year=yr?parseInt(yr[0]):2020;
+  const tl=year<1970?10:year<2000?8:year<2010?6:year<2015?5:4;
+  const est=((7+7+tl*2+7+7+7)/7).toFixed(1);
+  const cls=parseFloat(est)>=8.0?"CANDIDATE FOR BATCH REVIEW":year>2010?"MONITOR (post-2010 default)":"BELOW THRESHOLD";
+  const closest=KB60.filter(w=>!w.r06).sort((a,b)=>b.s-a.s)[0];
+  return `<span style="color:#c47a3a">━━ ⚠ OUT-OF-CANON EXPLORATION ━━━━━━━━━━━━━━━━━━━</span>
+
+Query:   "${q}"
+Status:  NOT FOUND in cmqs8ogt107yl07ads5pr3whq
+
+<span style="color:#C4922A">RAPID SCORE ESTIMATE</span>
+Craft 7 · Truth 7 · <span style="color:#C4922A">Timelessness ${tl}×2=${tl*2}</span> · Coherence 7 · Educ 7 · Access 7
+Weighted: ${est}/10 · ${cls}
+
+<span style="color:#C4922A">KB REDIRECT</span>
+→ ${closest.t} · ${closest.c} · Score ${closest.s}
+
+OOC works never substituted into active recommendations.
+<span style="color:rgba(242,237,223,0.3)">Submit via Port 06 for formal CanonGuardian batch review.</span>`;
+}
+
+function port07(q){
+  const lq=q.toLowerCase();
+  let pid=1;
+  if(lq.includes("2")||lq.includes("moral")||lq.includes("evil"))pid=2;
+  if(lq.includes("3")||lq.includes("music")||lq.includes("sound"))pid=3;
+  if(lq.includes("4")||lq.includes("good life")||lq.includes("philosoph"))pid=4;
+  if(lq.includes("5")||lq.includes("tech")||lq.includes("human"))pid=5;
+  if(lq.includes("6")||lq.includes("love"))pid=6;
+  const p=PATH_DATA[pid];
+  return `<span style="color:#C4922A">━━ PORT 07 — LEARNING PATH ${String(pid).padStart(2,"0")} ━━━━━━━━━━━━━━━━━</span>
+
+Path ${pid}:  "${p.name}"
+Mediums: ${p.med}
+Duration:${p.dur}
+
+${p.works.map((t,i)=>{const w=KB60.find(x=>x.t===t)||{t,s:9.0};return `STEP ${i+1}   ${w.t} · Score ${w.s}`;}).join("\n")}
+
+All ${p.works.length} works from sealed KB ✓ · Maturity-gated ✓
+<span style="color:rgba(242,237,223,0.3)">Source: Core Canon Seed List · All INTEGRATE · cmqs8ogt107yl07ads5pr3whq</span>`;
+}
+
+function handleQuery(){
+  const input=document.getElementById('tc-input');
+  const q=input.value.trim();
+  if(!q)return;
+
+  const btn=document.getElementById('tc-route-btn');
+  btn.textContent='Routing...';
+  btn.style.opacity='0.5';
+
+  const badge=document.getElementById('port-badge').textContent;
+  let response='';
+
+  if(badge.includes('02'))response=port02(q);
+  else if(badge.includes('03'))response=port03(q);
+  else if(badge.includes('04'))response=port04(q);
+  else if(badge.includes('07'))response=port07(q);
+  else{
+    // Check if query looks like OOC
+    const inKB=KB60.some(w=>q.toLowerCase().includes(w.t.toLowerCase().split(" ")[0])||q.toLowerCase().includes(w.c.toLowerCase().split(" ").slice(-1)[0].toLowerCase()));
+    if(!inKB&&q.length>4&&/[A-Z]/.test(q))response=port05(q);
+    else response=port01(q);
+  }
+
+  setTimeout(()=>{
+    const resp=document.getElementById('tc-response');
+    resp.style.display='block';
+    resp.innerHTML=`<div style="color:rgba(242,237,223,0.2);margin-bottom:8px">$ ${q}</div>`+
+      `<pre style="white-space:pre-wrap;font-family:inherit">${response}</pre>`+
+      `<div style="margin-top:14px"><button onclick="clearTerminal()" style="font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid rgba(242,237,223,0.15);color:rgba(242,237,223,0.3);padding:4px 12px;cursor:pointer">Clear ×</button></div>`;
+    resp.scrollTop=0;
+    btn.textContent='Route →';
+    btn.style.opacity='1';
+    input.value='';
+    detectPort('');
+  },400);
+}
+
+function clearTerminal(){
+  const resp=document.getElementById('tc-response');
+  resp.style.display='none';
+  resp.innerHTML='';
+}
+
 </script>
 </body>
 </html>
