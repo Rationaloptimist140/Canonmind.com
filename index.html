@@ -518,7 +518,7 @@
       <div class="price-card">
         <div class="pc-tag">Individual · Tier 1</div>
         <div class="pc-name">Signal</div>
-        <div class="pc-price">$19</div>
+        <div class="pc-price">$3.99</div>
         <div class="pc-period">per month · cancel anytime</div>
         <p class="pc-pitch">For the exhausted adult who has been meaning to watch <em>Andrei Rublev</em> for ten years. <strong>100 curated API calls per day.</strong> Access to Ports 01–03: recommendation, curriculum, and family tracks. The library is 60 works. You will not scroll into something bad.</p>
         <div class="pc-features">
@@ -534,7 +534,7 @@
       <div class="price-card featured">
         <div class="pc-tag pc-tag-gold">Family / Educator · Tier 2 · Most Popular</div>
         <div class="pc-name">Canon</div>
-        <div class="pc-price">$49</div>
+        <div class="pc-price">$9.99</div>
         <div class="pc-period">per month · cancel anytime</div>
         <p class="pc-pitch">For the family that wants culture to be part of home life — not a babysitter. For the educator who needs a pre-scored, curriculum-ready library. <strong>Unlimited API calls.</strong> All ports including streaming delivery and Rule 06 specialist works. Full signal-mcp access.</p>
         <div class="pc-features">
@@ -549,6 +549,9 @@
 
     </div>
 
+      <div style="text-align:center;margin:16px 0 8px">
+        <button onclick="openModal('Free','10 works')" style="background:none;border:none;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;color:rgba(242,237,223,0.4);cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(196,146,42,0.3);transition:color 0.2s;padding:0">Not ready yet? Try 10 works for free.</button>
+      </div>
     <div class="pricing-trust">
       <span class="pt-item">60 works · sealed KB</span>
       <span class="pt-item">No algorithmic noise</span>
@@ -938,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── MODAL ─────────────────────────────────────────────────────────────────
 function openModal(tier, price) {
-  document.getElementById('modal-tier-badge').textContent = tier + ' — ' + price;
+  document.getElementById('modal-tier-badge').textContent = (tier==='Free') ? 'Free — 10 works preview' : tier + ' — ' + price;
   document.getElementById('modal-form-state').style.display = 'block';
   document.getElementById('modal-success-state').style.display = 'none';
   document.getElementById('modal-email').value = '';
