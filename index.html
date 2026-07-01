@@ -722,12 +722,15 @@ function heroSignup(){
 document.getElementById('hero-email').addEventListener('keydown',e=>{if(e.key==='Enter')heroSignup()});
 
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CANONMIND SEALED RESPONSE ENGINE v2 — canonmind.com
-// Weighted port detection · 7 rich mock responses · slide-down pane
+// CANONMIND TERMINAL — LIVE API CONNECTION
+// Replaces all mock RESPONSES with real POST /query calls.
+// Port badge detection remains client-side for zero-latency UX.
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ── WEIGHTED PORT DETECTION ─────────────────────────────────────────────────
+// ── API URL — override via: window.CANON_API_URL = 'http://localhost:8000' ──
+const CANON_API = (typeof window !== 'undefined' && window.CANON_API_URL)
+  || 'https://canonmind-api.onrender.com';
+
 const PORT_WEIGHTS = {
   "01": ["recommend","suggest","give me","avoid","never seen","best","start","essential","what should","pick","one work","one film","one book","one album"],
   "02": ["week","curriculum","course","teach","unit","syllabus","class","lesson","4 week","four week","programme","structure","study"],
@@ -746,238 +749,204 @@ function detectPort(v) {
     badge.className = 'tc-port-badge active';
     return;
   }
-  const hits = {};
-  for (const [port, keywords] of Object.entries(PORT_WEIGHTS)) {
-    hits[port] = keywords.filter(k => val.includes(k)).length;
-  }
-  const best = Object.entries(hits).sort((a,b) => b[1]-a[1])[0];
-  const port  = (best[1] > 0) ? best[0] : '01';
-  const LABELS = {
-    "01":"PORT 01 — RECOMMENDATION","02":"PORT 02 — CURRICULUM",
-    "03":"PORT 03 — FAMILY TRACK","04":"PORT 04 — STREAMING DELIVERY",
-    "05":"PORT 05 — OOC PROTOCOL","06":"PORT 06 — CANONGUARDIAN AUDIT",
-    "07":"PORT 07 — LEARNING PATH"
-  };
-  badge.textContent = LABELS[port];
-  badge.className   = 'tc-port-badge active';
+
+
+// ── LOADING STATE ─────────────────────────────────────────────────────────
+function renderLoadingState() {
+  return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;color:var(--gold)">
+    <span style="letter-spacing:0.08em;font-size:0.68rem">Routing through sealed KB</span>
+    <span class="ndot" style="width:4px;height:4px;animation-delay:0s"></span>
+    <span class="ndot" style="width:4px;height:4px;animation-delay:0.2s"></span>
+    <span class="ndot" style="width:4px;height:4px;animation-delay:0.4s"></span>
+  </div>`;
 }
 
-// ── SEALED RESPONSE DATA (7 PORTS) ──────────────────────────────────────────
-const RESPONSES = {
+// ── ERROR STATE ───────────────────────────────────────────────────────────
+function renderErrorState(msg, q) {
+  return `<div class="tc-dim" style="margin-bottom:6px">$ ${q}</div>
+<div style="color:rgba(196,146,42,0.7);margin-bottom:8px">━━ API ERROR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+<div><span class="tc-k">STATUS</span><span class="tc-warn">${msg}</span></div>
+<div><span class="tc-k">NOTE</span><span class="tc-dim">Backend may not be deployed. Set window.CANON_API_URL to your local server.</span></div>
+<div style="margin-top:14px"><button class="tc-clear-btn" onclick="clearResponse()">Clear ×</button></div>`;
+}
 
-"01": {
-  label: "PORT 01 — RECOMMENDATION",
-  lines: [
-    ['WORK',       'Andrei Rublev'],
-    ['DIRECTOR',   'Andrei Tarkovsky · Soviet Union · 1966'],
-    ['RUNTIME',    '185 min · Black & White / Colour · Russian'],
-    ['SCORE',      '9.1 / 10', 'score'],
-    ['TIMELESS',   '10 / 10 — 60 years · Sight & Sound top-20 every decade'],
-    ['ROUTING',    'SPECIALIST 16+ · Rule 06 Advisory · On-ramp: Bicycle Thieves', 'warn'],
-    ['GATE',       'PASSED — Craft 10 · Truth 10 · TL×2=20 · Coherence 10', 'ok'],
-    ['STREAM',     'criterionchannel.com — Canon Priority'],
-    ['──────────', '', 'sep'],
-    ['CCF M1',     '00:00–28:00 · The Jester sequence — art as moral witness under tyranny'],
-    ['CCF M2',     '90:00–130:00 · The siege — silence as the only honest response'],
-    ['CCF M3',     '168:00–185:00 · The bell — creation as faith without evidence'],
-    ['──────────', '', 'sep'],
-    ['NEXT',       'The Mirror (1975 · 8.4) · Stalker (1979 · 9.0)'],
-    ['SOURCE',     'Core Canon Seed List · cmqs8ogt107yl07ads5pr3whq · INTEGRATE', 'dim'],
-  ]
-},
+// ── WORK RENDERER ─────────────────────────────────────────────────────────
+function renderWork(work, routes, markers) {
+  const isRule06 = work.rule06 || work.verdict === 'INTEGRATE_RULE06';
+  const rule06line = isRule06
+    ? `<br><span class="tc-warn">⚠ Rule 06 — Specialist 16+ · On-ramp: ${work.onramp || 'Andrei Rublev'}</span>`
+    : '';
+  const verdictCls = work.verdict && work.verdict.startsWith('INTEGRATE') ? 'tc-ok' : 'tc-warn';
 
-"02": {
-  label: "PORT 02 — 4-WEEK CURRICULUM",
-  lines: [
-    ['THEME',      '"Identity and the Self"'],
-    ['MEDIUMS',    'Film + Literature'],
-    ['DURATION',   '4 weeks · Intermediate'],
-    ['──────────', '', 'sep'],
-    ['WEEK 01',    'Hamlet · Shakespeare · 9.6 · "Can a self uncertain of itself act?"'],
-    ['WEEK 02',    'Persona · Bergman · 9.1 · "What happens when one self absorbs another?" · Specialist 16+', 'warn'],
-    ['WEEK 03',    'Ulysses (selected) · Joyce · 9.1 · "What does a self look like unedited?"'],
-    ['WEEK 04',    'Rashomon · Kurosawa · 9.2 · "Can a self that needs protecting tell the truth?"'],
-    ['──────────', '', 'sep'],
-    ['OPTIONAL',   'Don Quixote (self as fiction) · Citizen Kane (self as mythology)'],
-    ['MATURITY',   '16+ recommended · Persona: specialist routing enforced', 'warn'],
-    ['COMPLIANCE', '4/4 works from sealed KB', 'ok'],
-    ['SOURCE',     'Core Canon Seed List · cmqs8ogt107yl07ads5pr3whq · All INTEGRATE', 'dim'],
-  ]
-},
+  let h = `
+<div><span class="tc-k">TITLE</span><span style="color:var(--cream)">${work.title}</span></div>
+<div><span class="tc-k">CREATOR</span>${work.creator} · ${work.year} · ${(work.medium||'').toUpperCase()}</div>
+<div><span class="tc-k">SCORE</span><span class="tc-score-badge">${work.canon_score}</span></div>
+<div><span class="tc-k">VERDICT</span><span class="${verdictCls}">${work.verdict}</span>${rule06line}</div>
+<div><span class="tc-k">MATURITY</span>${work.maturity_flag || 'Clean'}</div>`;
 
-"03": {
-  label: "PORT 03 — FAMILY-SAFE CULTURAL TRACK",
-  lines: [
-    ['AGES',       '9–14 · Mixed'],
-    ['THEME',      '"Courage, Justice and the World"'],
-    ['NOTE',       '"The goal is not comprehension — it is exposure."'],
-    ['──────────', '', 'sep'],
-    ['WEEK 01',    '[Lit · Age 9+]  The Odyssey · Homer · 9.5 · "What would you refuse?"'],
-    ['WEEK 02',    '[Film · Age 12+] Tokyo Story · Ozu · 9.4 · "Who do you most understand?"'],
-    ['WEEK 03',    '[Art · Age 9+]  Guernica · Picasso · 9.4 · "What can art do that news can\'t?"'],
-    ['WEEK 04',    '[Music · Age 10+] Kind of Blue · Davis · 9.7 · "What colour is this music?"'],
-    ['──────────', '', 'sep'],
-    ['WARNINGS',   'ZERO CONTENT WARNINGS on all selected works', 'ok'],
-    ['COMPLIANCE', '4/4 works from sealed KB · Family-safe pre-screened', 'ok'],
-    ['SOURCE',     'Core Canon Seed List · cmqs8ogt107yl07ads5pr3whq · All INTEGRATE', 'dim'],
-  ]
-},
-
-"04": {
-  label: "PORT 04 — STREAMING DELIVERY",
-  lines: [
-    ['WORK',       'Bicycle Thieves (Ladri di biciclette)'],
-    ['DIRECTOR',   'Vittorio De Sica · Italy · 1948 · 89 min · Italian'],
-    ['SCORE',      '9.1 / 10 · Timelessness 10 / 10', 'score'],
-    ['ROUTING',    'Clean · Age 12+ · Family-safe ✓', 'ok'],
-    ['──────────', '', 'sep'],
-    ['TIER 1 ✦',   'criterionchannel.com/bicycle-thieves — Canon Priority · 4K'],
-    ['TIER 1 ✦',   'mubi.com/films/bicycle-thieves — Canon-Aligned · varies by region'],
-    ['TIER 1 ✦',   'kanopy.com — Free via library card'],
-    ['TIER 2',     'Prime Video / Apple TV — Rental / Purchase'],
-    ['──────────', '', 'sep'],
-    ['EXEGESIS',   'Y-01 Adam Gopnik (Criterion) · Score 9.2 · APPROVED ✦', 'ok'],
-    ['EXEGESIS',   'Y-03 Philip Kaufman (Criterion) · Score 9.3 · APPROVED ✦', 'ok'],
-    ['──────────', '', 'sep'],
-    ['CCF',        '5 semantic markers available · Structural + 2050 verification'],
-    ['SOURCE',     'Core Canon Seed List · cmqs8ogt107yl07ads5pr3whq · INTEGRATE', 'dim'],
-  ]
-},
-
-"05": {
-  label: "PORT 05 — ⚠ OUT-OF-CANON EXPLORATION",
-  lines: [
-    ['QUERY',      '"Dune: Part Two (2024)"'],
-    ['KB CHECK',   'NOT FOUND in cmqs8ogt107yl07ads5pr3whq', 'warn'],
-    ['──────────', '', 'sep'],
-    ['RAPID SCORE', 'Running 6-dimension estimate...'],
-    ['Craft',      '9 / 10'],
-    ['Human Truth','6 / 10'],
-    ['TL ×2',      '3 × 2 = 6   ← 2 years old · franchise · hype window', 'warn'],
-    ['Coherence',  '7 / 10'],
-    ['Educational','5 / 10'],
-    ['Accessibility','9 / 10'],
-    ['WEIGHTED',   '6.0 / 10   — BELOW THRESHOLD', 'warn'],
-    ['──────────', '', 'sep'],
-    ['FLAGS',      'post-2010 default MONITOR · Franchise IP · Timelessness 3/10', 'warn'],
-    ['VERDICT',    'REJECT — cannot clear 8.0 threshold under current formula', 'warn'],
-    ['──────────', '', 'sep'],
-    ['REDIRECT',   '→ 2001: A Space Odyssey · Kubrick · 1968 · Score 9.3'],
-    ['NOTE',       'The Herbert novel (1965) is a separate strong candidate for Batch 006.'],
-    ['SOURCE',     'OOC works never substituted into active library. cmqs8ogt107yl07ads5pr3whq', 'dim'],
-  ]
-},
-
-"06": {
-  label: "PORT 06 — CANONGUARDIAN AUDIT",
-  lines: [
-    ['CANDIDATE',  'Leviathan · Andrei Zvyagintsev · 2014 · Film'],
-    ['SUBMITTED',  'Batch 006 queue · Phase 06 session'],
-    ['──────────', '', 'sep'],
-    ['Craft',      '9 / 10'],
-    ['Human Truth','10 / 10'],
-    ['TL ×2',      '4 × 2 = 8   ← 12 years · strong but insufficient endurance', 'warn'],
-    ['Coherence',  '9 / 10'],
-    ['Educational','8 / 10'],
-    ['Accessibility','6 / 10'],
-    ['WEIGHTED',   '7.1 / 10   — BELOW 8.0 THRESHOLD', 'warn'],
-    ['──────────', '', 'sep'],
-    ['FLAGS',      'post-2010 MONITOR default · post-1990 CanonGuardian challenge', 'warn'],
-    ['VERDICT',    'MONITOR — revisit 2024+ · 10-year minimum endurance period', 'warn'],
-    ['CAP NOTE',   'KB sealed 60/60 — entry requires Lineage Archive displacement (Constant 08)', 'warn'],
-    ['REVISIT',    '2024 (now eligible for first re-evaluation — no Batch 006 run yet)'],
-    ['SOURCE',     'CanonGuardian · cmqs8ogt107yl07ads5pr3whq · Constant 08 enforced', 'dim'],
-  ]
-},
-
-"07": {
-  label: "PORT 07 — LEARNING PATH 05",
-  lines: [
-    ['PATH',       '05 — Humanity vs Technology'],
-    ['MEDIUMS',    'Film + Literature'],
-    ['LEVEL',      'Intermediate'],
-    ['DURATION',   '4–5 weeks'],
-    ['──────────', '', 'sep'],
-    ['STEP 1',     'The Trial · Kafka · 9.2 · "The individual vs. the apparatus"'],
-    ['STEP 2',     'One Hundred Years of Solitude · Márquez · 9.2 · "Technology as solvent"'],
-    ['STEP 3',     'La Règle du jeu · Renoir · 9.5 · "Society as mechanism"'],
-    ['STEP 4',     'Vertigo · Hitchcock · 9.2 · "Engineering desire"'],
-    ['STEP 5',     '2001: A Space Odyssey · Kubrick · 9.3 · "Technology surpasses its creator"'],
-    ['STEP 6',     'Apocalypse Now · Coppola · 9.3 · "The terminal station" · Mature 18+', 'warn'],
-    ['──────────', '', 'sep'],
-    ['OPTIONAL',   'Andrei Rublev — Rule 06 Specialist · "The human response that tech cannot replicate"', 'warn'],
-    ['NOTE',       'Complete Path 05 before requesting Stalker (Rule 06 prerequisite).'],
-    ['COMPLIANCE', '6/6 works from sealed KB · Maturity-gated', 'ok'],
-    ['SOURCE',     'Core Canon Seed List · cmqs8ogt107yl07ads5pr3whq · All INTEGRATE', 'dim'],
-  ]
-},
-}; // end RESPONSES
-
-// ── RENDERER ─────────────────────────────────────────────────────────────────
-function buildResponseHTML(portId) {
-  const data = RESPONSES[portId];
-  if (!data) return `<span class="tc-warn">No response data for port ${portId}</span>`;
-
-  let html = `<div style="color:rgba(242,237,223,0.5);margin-bottom:10px">` +
-    `<span class="tc-ok">━━ ${data.label} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span></div>`;
-
-  for (const row of data.lines) {
-    const [key, val, type] = row;
-    if (key.startsWith('──')) {
-      html += `<div class="tc-sep">${'─'.repeat(52)}</div>`;
-      continue;
+  // Routes
+  const r = routes || work.delivery_routes || [];
+  if (r.length) {
+    h += `<div class="tc-sep">─────────────────────────────────────────────────────────────</div>`;
+    for (const rt of r.slice(0, 3)) {
+      const lnk = rt.url
+        ? `<a href="${rt.url}" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none">${rt.platform_name}</a>`
+        : `<span style="color:var(--cream)">${rt.platform_name}</span>`;
+      h += `<div><span class="tc-k">${rt.badge||rt.tier||'STREAM'}</span>${lnk}${rt.note ? ` <span class="tc-dim">· ${rt.note}</span>` : ''}</div>`;
     }
-    let valHtml = '';
-    if (type === 'score')   valHtml = `<span class="tc-score-badge">${val}</span>`;
-    else if (type === 'ok') valHtml = `<span class="tc-ok">${val}</span>`;
-    else if (type === 'warn')valHtml = `<span class="tc-warn">${val}</span>`;
-    else if (type === 'dim') valHtml = `<span class="tc-dim">${val}</span>`;
-    else if (type === 'sep') valHtml = '';
-    else valHtml = `<span style="color:var(--cream)">${val}</span>`;
-
-    html += `<div><span class="tc-k">${key}</span>${valHtml}</div>`;
   }
 
-  html += `<div style="margin-top:16px"><button class="tc-clear-btn" onclick="clearResponse()">Clear ×</button></div>`;
+  // CCF markers
+  const m = markers || work.ccf_markers || [];
+  if (m.length) {
+    h += `<div class="tc-sep">─────────────────────────────────────────────────────────────</div>`;
+    for (const mk of m.slice(0, 2)) {
+      const ts = mk.timestamp_start ? `${mk.timestamp_start}` : '';
+      const lbl = ts ? `CCF ${ts}` : 'CCF';
+      h += `<div><span class="tc-k">${lbl}</span>${mk.label}</div>
+<div style="padding-left:108px;color:rgba(242,237,223,0.35);line-height:1.5">${mk.watch_instruction || mk.cognitive_insight || ''}</div>`;
+    }
+  }
+  return h;
+}
+
+// ── PATH RENDERER ─────────────────────────────────────────────────────────
+function renderPath(path) {
+  if (!path) return '';
+  let h = `
+<div><span class="tc-k">PATH</span><span style="color:var(--cream)">${path.path_number ? 'Path ' + path.path_number + ' —' : ''} ${path.name}</span></div>
+<div><span class="tc-k">MEDIUMS</span>${path.mediums}</div>
+<div><span class="tc-k">DURATION</span>${path.duration}</div>`;
+  if (path.framing_question) {
+    h += `<div><span class="tc-k">QUESTION</span><span style="font-style:italic;color:var(--c70)">"${path.framing_question}"</span></div>`;
+  }
+  if (path.items && path.items.length) {
+    h += `<div class="tc-sep">─────────────────────────────────────────────────────────────</div>`;
+    for (const it of path.items) {
+      const opt = it.is_optional ? ' <span class="tc-dim">(optional)</span>' : '';
+      h += `<div><span class="tc-k">STEP ${it.step_order}</span>${it.work ? it.work.title : '—'}${opt}</div>`;
+      if (it.central_question) {
+        h += `<div style="padding-left:108px;color:rgba(242,237,223,0.35)">"${it.central_question}"</div>`;
+      }
+    }
+  }
+  return h;
+}
+
+// ── OOC RENDERER ─────────────────────────────────────────────────────────
+function renderOOC(est, explanation) {
+  if (!est) return `<div><span class="tc-k">STATUS</span><span class="tc-warn">OUT OF CANON — No estimate available</span></div>`;
+  const dims = est.dimensions || {};
+  let h = `
+<div><span class="tc-k">STATUS</span><span class="tc-warn">⚠ OUT-OF-CANON EXPLORATION</span></div>
+<div class="tc-sep">─────────────────────────────────────────────────────────────</div>
+<div><span class="tc-k">WEIGHTED</span><span class="tc-score-badge">${(est.weighted_score||'?')}</span></div>`;
+  if (dims.timelessness !== undefined) {
+    h += `<div><span class="tc-k">TL ×2</span><span class="${dims.timelessness < 5 ? 'tc-warn' : ''}">${dims.timelessness} × 2 = ${dims.timelessness*2}</span></div>`;
+  }
+  h += `<div><span class="tc-k">VERDICT</span><span class="tc-warn">${est.classification || 'BELOW THRESHOLD'}</span></div>`;
+  if (explanation) {
+    h += `<div class="tc-sep">─────────────────────────────────────────────────────────────</div>
+<div><span class="tc-k">NOTE</span><span class="tc-dim">${explanation}</span></div>`;
+  }
+  return h;
+}
+
+// ── LIVE RESPONSE RENDERER ────────────────────────────────────────────────
+function renderLiveResponse(data, q) {
+  const { port_label, matched_work, matched_path, is_ooc, ooc_estimate,
+          gate_status, companion_markers, legal_routes, explanation,
+          kb_table, kb_sealed } = data;
+
+  const sep = '━'.repeat(Math.max(2, 52 - (port_label||'').length));
+  let html = `<div class="tc-dim" style="margin-bottom:8px">$ ${q}</div>
+<div style="color:rgba(196,146,42,0.8);margin-bottom:8px">━━ ${port_label} ${sep}</div>`;
+
+  if (is_ooc) {
+    html += renderOOC(ooc_estimate, explanation);
+  } else if (matched_work) {
+    html += renderWork(matched_work, legal_routes || [], companion_markers || []);
+    if (explanation) {
+      html += `<div class="tc-sep">─────────────────────────────────────────────────────────────</div>
+<div><span class="tc-k">SUMMARY</span><span class="tc-dim">${explanation}</span></div>`;
+    }
+  } else if (matched_path) {
+    html += renderPath(matched_path);
+    if (explanation) {
+      html += `<div><span class="tc-k">SUMMARY</span><span class="tc-dim">${explanation}</span></div>`;
+    }
+  } else {
+    html += `<div style="color:rgba(242,237,223,0.35);font-style:italic;padding:6px 0">
+      No direct KB match. Try a more specific query or a different port keyword.
+    </div>`;
+    if (explanation) html += `<div><span class="tc-k">HINT</span><span class="tc-dim">${explanation}</span></div>`;
+  }
+
+  const sealedLabel = kb_sealed ? '<span class="tc-ok">SEALED</span>' : 'OPEN';
+  const gateLabel   = gate_status === 'PASSED' ? '<span class="tc-ok">PASSED</span>' : `<span class="tc-warn">${gate_status}</span>`;
+  html += `
+<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(242,237,223,0.08);display:flex;justify-content:space-between;align-items:center">
+  <span class="tc-dim">${kb_table||'cmqs8ogt107yl07ads5pr3whq'} · ${sealedLabel} · Gate: ${gateLabel}</span>
+  <button class="tc-clear-btn" onclick="clearResponse()">Clear ×</button>
+</div>`;
+
   return html;
 }
 
-// ── ROUTE HANDLER ─────────────────────────────────────────────────────────────
-function handleQuery() {
+// ── QUERY HANDLER (LIVE) ──────────────────────────────────────────────────
+async function handleQuery() {
   const input = document.getElementById('tc-input');
   const badge = document.getElementById('port-badge');
   const btn   = document.getElementById('tc-route-btn');
   const pane  = document.getElementById('tc-response');
-  const q     = input.value.trim();
-
+  const q     = (input.value || '').trim();
   if (!q) return;
 
-  // Parse port number from badge text ("PORT 04 — ..." → "04")
-  const portMatch = badge.textContent.match(/PORT (\d+)/);
-  const portId    = portMatch ? portMatch[1].padStart(2,'0') : '01';
-
-  // Disable input during routing
+  // Lock controls
   btn.textContent = 'Routing...';
   btn.style.opacity = '0.5';
-  btn.disabled = true;
+  btn.disabled  = true;
   input.disabled = true;
 
-  setTimeout(() => {
-    // Render response
-    pane.innerHTML = `<div style="color:var(--c30);margin-bottom:8px;font-size:0.62rem">$ ${q}</div>` +
-                     buildResponseHTML(portId);
-    pane.style.display = 'block';
-    pane.scrollTop = 0;
+  // Show loading pane immediately
+  pane.innerHTML = renderLoadingState();
+  pane.style.display = 'block';
+  pane.scrollTop = 0;
 
-    // Reset controls
+  const t0 = Date.now();
+
+  try {
+    const res = await fetch(`${CANON_API}/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+
+    const data = await res.json();
+
+    // Minimum visual delay: 400ms feels intentional, not instant
+    const elapsed = Date.now() - t0;
+    if (elapsed < 400) await new Promise(r => setTimeout(r, 400 - elapsed));
+
+    pane.innerHTML = renderLiveResponse(data, q);
+
+  } catch (err) {
+    const elapsed = Date.now() - t0;
+    if (elapsed < 350) await new Promise(r => setTimeout(r, 350 - elapsed));
+    pane.innerHTML = renderErrorState(err.message || 'Network error', q);
+  } finally {
     btn.textContent = 'Route →';
     btn.style.opacity = '1';
-    btn.disabled = false;
+    btn.disabled  = false;
     input.disabled = false;
-    input.value = '';
-    input.focus();
+    input.value   = '';
     detectPort('');
-  }, 400);
+    pane.scrollTop = 0;
+    input.focus();
+  }
 }
 
 function clearResponse() {
@@ -986,45 +955,11 @@ function clearResponse() {
   pane.innerHTML = '';
 }
 
-// Enter key support
+// Enter key
 document.addEventListener('DOMContentLoaded', () => {
   const ti = document.getElementById('tc-input');
   if (ti) ti.addEventListener('keydown', e => { if (e.key === 'Enter') handleQuery(); });
 });
-
-
-// ── MODAL ─────────────────────────────────────────────────────────────────
-function openModal(tier, price) {
-  document.getElementById('modal-tier-badge').textContent = (tier==='Free') ? 'Free — 10 works preview' : tier + ' — ' + price;
-  document.getElementById('modal-form-state').style.display = 'block';
-  document.getElementById('modal-success-state').style.display = 'none';
-  document.getElementById('modal-email').value = '';
-  document.getElementById('waitlist-modal').classList.add('open');
-  setTimeout(() => document.getElementById('modal-email').focus(), 300);
-}
-function closeModal() {
-  document.getElementById('waitlist-modal').classList.remove('open');
-}
-function closeModalOutside(e) {
-  if (e.target.id === 'waitlist-modal') closeModal();
-}
-function submitWaitlist() {
-  const email = document.getElementById('modal-email').value.trim();
-  const tier  = document.getElementById('modal-tier-badge').textContent;
-  if (!email || !/.+@.+\..+/.test(email)) {
-    document.getElementById('modal-email').style.borderColor = 'rgba(196,146,42,0.7)';
-    setTimeout(() => document.getElementById('modal-email').style.borderColor = '', 1800);
-    return;
-  }
-  // Store locally
-  const list = JSON.parse(localStorage.getItem('canon_waitlist') || '[]');
-  list.push({ email, tier, ts: new Date().toISOString() });
-  localStorage.setItem('canon_waitlist', JSON.stringify(list));
-  // Show success
-  document.getElementById('modal-form-state').style.display = 'none';
-  document.getElementById('modal-success-state').style.display = 'block';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 </script>
 </body>
